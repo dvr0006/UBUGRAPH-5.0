@@ -23,6 +23,7 @@
 		<!-- Div con el formulario de logueo y los botones de registro y recuperacion -->
 		<div class="centro">		
 			 <form id="form_login" name="login" action="./paginas/login.php" method="post">
+			 hola
 	             <h1><b><?php echo $texto["Index_3"]; ?>:</b></h1>
 	             <label class="ajustado"><b><?php echo $texto["Index_4"]; ?>:</b></label>
 	             <input class="ajustado" required="required" type='text' name='usuario' value='' size=20><br>

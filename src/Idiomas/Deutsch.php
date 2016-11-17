@@ -157,7 +157,8 @@
 		"Funciones_menu_2"=>"Vorschlagen",
 		"Funciones_menu_3"=>"Verlauf",
 		"Funciones_menu_4"=>"Tutoria",
-		
+        "Funciones_menu_5"=>"Generieren XML",
+				
 		"Funciones_cabecera_1"=>"Eingeloggt als",
 		
 		"Funciones_evaluar_1"=>"Auswertung",

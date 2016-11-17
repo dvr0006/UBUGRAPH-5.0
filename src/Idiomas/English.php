@@ -157,7 +157,8 @@
 		"Funciones_menu_2"=>"Propose",
 		"Funciones_menu_3"=>"History",
 		"Funciones_menu_4"=>"Tutoring",
-		
+        "Funciones_menu_5"=>"Generate XML",
+				
 		"Funciones_cabecera_1"=>"Logged in as",
 		
 		"Funciones_evaluar_1"=>"Evaluation",

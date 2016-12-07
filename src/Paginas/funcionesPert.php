@@ -674,26 +674,27 @@
         $d=rand(1,4);
         if ($d==1){
             $distribucion='NORMAL';
-            $parametro_01=rand(1,25);
-            $parametro_02=rand(0,10);
+            $parametro_01=rand(1,25000)/1000.0;
+            $parametro_02=rand(0,$parametro_01/3*1000)/1000.0; //3 sigmas
+            $parametro_02=round(pow($parametro_02,2),3); //varianza=desviación al cuadrado
             $parametro_03=null;
         }
         else if($d==2){
             $distribucion='BETA';
-            $parametro_01=rand(0,25);
-            $parametro_02=rand(0,25);
-            $parametro_03=rand(0,25);
+            $parametro_02=rand(1,25000)/1000.0; //valor mas probable
+            $parametro_01=rand(0,$parametro_02*1000)/1000.0; //valor pesimista
+            $parametro_03=rand($parametro_02*1000,25000)/1000.0; //valor optimista
         }
         else if($d==3){
             $distribucion='TRIANGULAR';
-            $parametro_01=rand(0,25);
-            $parametro_02=rand(0,25);
-            $parametro_03=rand(0,25);
+            $parametro_03=rand(1,25000)/1000.0; //valor c (entre a y b)
+            $parametro_01=rand(0,$parametro_03*1000)/1000.0; //valor a
+            $parametro_02=rand($parametro_03*1000,25000)/1000.0; //valor b
         }
         else{
             $distribucion='UNIFORME';
-            $parametro_01=rand(0,25);
-            $parametro_02=rand(0,25);
+            $parametro_01=rand(1,25000)/1000.0; //valor a 
+            $parametro_02=rand($parametro_01*1000,25000)/1000.0; //valor b mayor que a
             $parametro_03=null;
         }
         return new Actividad($actividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);

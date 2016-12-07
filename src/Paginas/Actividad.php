@@ -129,17 +129,17 @@
 							$this->varianza = $parametro_02;
 							break;
 						case 'BETA':
-							$this->media = ($parametro_01+$parametro_02+4*$parametro_03)/6.0;
-							$this->varianza = pow($parametro_02-$parametro_01,2)/36.0;
+							$this->media = round(($parametro_01+$parametro_02+4*$parametro_03)/6.0,3);
+							$this->varianza = round(pow($parametro_02-$parametro_01,2)/36.0,3);
 							break;
 						case 'TRIANGULAR':
-							$this->media = ($parametro_01+$parametro_02+$parametro_03)/3.0;
-							$this->varianza = (pow($parametro_01,2)+pow($parametro_02,2)+pow($parametro_03,2)-
-								$parametro_01*$parametro_02-$parametro_01*$parametro_03-$parametro_02*$parametro_03)/18.0;
+							$this->media = round(($parametro_01+$parametro_02+$parametro_03)/3.0,3);
+							$this->varianza = round((pow($parametro_01,2)+pow($parametro_02,2)+pow($parametro_03,2)-
+								$parametro_01*$parametro_02-$parametro_01*$parametro_03-$parametro_02*$parametro_03)/18.0,3);
 							break;
 						case 'UNIFORME':
-							$this->media = ($parametro_01+$parametro_02)/2.0;
-							$this->varianza = pow($parametro_02-$parametro_01,2)/12.0;
+							$this->media = round(($parametro_01+$parametro_02)/2.0,3);
+							$this->varianza = round(pow($parametro_02-$parametro_01,2)/12.0,3);
 							break;
 					}
 				}
@@ -147,8 +147,6 @@
 					$this->media=$media;
 					$this->varianza=$varianza;
 				}
-                $this->media = round($this->media,2);
-                $this->varianza = round($this->varianza,2);
 				$this->duracion = $this->media;
 				$this->distribucion = $distribucion;
 				$this->parametro_01 = $parametro_01;

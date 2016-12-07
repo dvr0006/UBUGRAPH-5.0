@@ -48,7 +48,8 @@
 					//Mostramos los grafos con su fecha, tipo y puntuacion y un enlace a su resolucion
 					while($reg)
 					{
-						echo "\n<a  href=\"./{$reg["RESOLUCION"]}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/5</li></a>";
+                        $metodo=strtolower($reg["RESOLUCION"]=='roy')?'roy':'pert';
+						echo "\n<a  href=\"./{$metodo}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/5</li></a>";
 						$reg = $res->fetch_assoc();
 					}
 					echo "\n</ul>";
@@ -60,7 +61,7 @@
 				}
 				
 				
-				mysqli_close($conexion);//Cerramos conexión
+				mysqli_close($conexion);//Cerramos conexiï¿½n
 			?>
         </div>
 	</body>

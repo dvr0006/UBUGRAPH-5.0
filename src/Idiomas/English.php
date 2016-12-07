@@ -94,6 +94,12 @@
 		"Generando_10"=>"Which activities take part in the critic path? (separate them by comas)",
 		"Generando_11"=>"Solve",
 		"Generando_12"=>"Evaluation",
+		"Generando_13"=>"Distribution",
+		"Generando_14"=>"Mean",
+		"Generando_15"=>"Variance",
+		"Generando_16"=>"Parameter 01",
+		"Generando_17"=>"Parameter 02",
+		"Generando_18"=>"Parameter 03",
 		
 		//Pert.php
 		"Pert_1"=>"An unexpected error has occurred.",

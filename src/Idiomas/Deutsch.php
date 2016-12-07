@@ -94,6 +94,12 @@
 		"Generando_10"=>"Welche Aktivitäten sind Teil des kritischenn Weges? (Trennen Sie die mit Klammern)",
 		"Generando_11"=>"Lösen",
 		"Generando_12"=>"Auswertung",
+		"Generando_13"=>"Einteilung",
+		"Generando_14"=>"Durchschnitt",
+		"Generando_15"=>"Unterschied",
+		"Generando_16"=>"Parameter 01",
+		"Generando_17"=>"Parameter 02",
+		"Generando_18"=>"Parameter 03",
 		
 		//Pert.php
 		"Pert_1"=>"Es ist ein unerwarteter Fehler aufgetreten.",

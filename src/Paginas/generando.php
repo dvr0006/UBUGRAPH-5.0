@@ -7,8 +7,10 @@
 		header("Location: /");
 	}
 	require_once("funciones.php");
+    require_once("funcionesPert.php");
 	//Cargamos el idioma
 	require_once("../".idioma());
+	require_once("./Actividad.php");
 ?>
 <html>	
 	<head>
@@ -20,6 +22,7 @@
 				$nombres = array();
 				$precedencias = array();
 				$duraciones = array();
+				$actividades = array();
 				
 				$conexion = conectarse();
 				
@@ -31,7 +34,7 @@
 				if($tuplas != 0)
 				{
 					$reg = $result->fetch_assoc();
-					$metodo = $reg["RESOLUCION"];
+					$metodo = strtolower($reg["RESOLUCION"]);
 					$consulta = "SELECT * FROM nodos WHERE ID_GRAFO = {$reg["ID_GRAFO"]};";
 					$result = $conexion->query($consulta);
 					$reg = $result->fetch_assoc();
@@ -42,6 +45,8 @@
 						array_push($nombres, $reg["NOMBRE"]);
 						array_push($precedencias, $reg["PRECEDENCIAS"]);
 						array_push($duraciones, $reg["DURACION"]);
+						$actividad = new Actividad($reg["NOMBRE"],$reg["DURACION"],$reg["DISTRIBUCION"],$reg["MEDIA"],$reg["VARIANZA"],$reg["PARAMETRO_01"],$reg["PARAMETRO_02"],$reg["PARAMETRO_03"]);
+                        array_push($actividades, $actividad);
 						$reg = $result->fetch_assoc();
 					}
 				}
@@ -84,12 +89,27 @@
 						}
 						
 						array_push($precedencias, $p);
-						
-						$duracionNodo = rand(1,25);
+
+						//Generar actividad auxiliar dependiento del método de resolución
+						if($metodo == "pert_probabilistico"){
+							$actividad=randomActividadProbabilistica($ids[$i]);
+						}
+						else{
+							$actividad=new Actividad($ids[$i], rand(1,25),null,null,null,null,null,null);
+						}
+                        array_push($actividades, $actividad);
+                        
+						$duracionNodo = $actividad->getDuracion();
 						array_push($duraciones, $duracionNodo);
 						
 						//Guardamos cada uno de los nodos generados en la BD
-						$consulta = "INSERT INTO nodos(NOMBRE, ID_GRAFO, DURACION, PRECEDENCIAS) VALUES('{$ids[$i]}', {$idGrafo}, {$duracionNodo}, '{$p}');";
+					    $null01 = is_null($actividad->getDistribucion())?'NULL':"'".$actividad->getDistribucion()."'";
+                        $null02 = is_null($actividad->getMedia())?'NULL':$actividad->getMedia();
+                        $null03 = is_null($actividad->getVarianza())?'NULL':$actividad->getVarianza();
+                        $null04 = is_null($actividad->getParametro_01())?'NULL':$actividad->getParametro_01();
+                        $null05 = is_null($actividad->getParametro_02())?'NULL':$actividad->getParametro_02();
+                        $null06 = is_null($actividad->getParametro_03())?'NULL':$actividad->getParametro_03();
+						$consulta = "INSERT INTO nodos(NOMBRE, ID_GRAFO, DURACION, PRECEDENCIAS, DISTRIBUCION, MEDIA, VARIANZA, PARAMETRO_01, PARAMETRO_02, PARAMETRO_03) VALUES('{$ids[$i]}', {$idGrafo}, {$duracionNodo}, '{$p}', {$null01}, {$null02}, {$null03}, {$null04}, {$null05}, {$null06});";
 						$conexion->query($consulta);
 					}
 				}
@@ -106,6 +126,14 @@
 						echo "\n<th>{$texto["Generando_3"]}</th>";
 						echo "\n<th>{$texto["Generando_4"]}</th>";
 						echo "\n<th>{$texto["Generando_5"]}</th>";
+						if($metodo == "pert_probabilistico"){
+							echo "\n<th>{$texto["Generando_13"]}</th>";
+							echo "\n<th>{$texto["Generando_14"]}</th>";
+							echo "\n<th>{$texto["Generando_15"]}</th>";
+							echo "\n<th>{$texto["Generando_16"]}</th>";
+							echo "\n<th>{$texto["Generando_17"]}</th>";
+							echo "\n<th>{$texto["Generando_18"]}</th>";
+						}
 					echo "\n</tr>";
 					for($i = 0; $i < sizeof($nombres); $i++)
 					{
@@ -113,11 +141,19 @@
 							echo "\n<td>{$nombres[$i]}</td>";
 							echo "\n<td>{$precedencias[$i]}</td>";
 							echo "\n<td>{$duraciones[$i]}</td>";
+							if($metodo == "pert_probabilistico"){
+								echo "\n<td>{$actividades[$i]->getDistribucion()}</td>";
+								echo "\n<td>{$actividades[$i]->getMedia()}</td>";
+								echo "\n<td>{$actividades[$i]->getVarianza()}</td>";
+								echo "\n<td>{$actividades[$i]->getParametro_01()}</td>";
+								echo "\n<td>{$actividades[$i]->getParametro_02()}</td>";
+								echo "\n<td>{$actividades[$i]->getParametro_03()}</td>";
+							}
 						echo "\n</tr>";
 					}
 				echo "\n</table><br>";
 				
-				if($metodo == "pert")
+				if ($metodo == "pert" || $metodo == "pert_probabilistico")
 					$metodo = "pertCorregido";
 				
 				//Formulario de resolucion del grafo.

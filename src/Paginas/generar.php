@@ -42,6 +42,7 @@
 				<select name="metodo" class="ajustado">
 					<option value="pert">PERT</option>
 					<option value="roy">ROY</option>
+                    <option value="pert_probabilistico">PERT_PROBABILÍSTICO</option>
 				</select>
 				
 	 			<input class="ajustado" type="submit" value="<?php echo $texto["Generar_4"]; ?>">

@@ -17,7 +17,7 @@
 		$grafo = array();
 		for($i = 0; $i < count($nombres); $i++)
 		{
-			$grafo[$nombres[$i]] = new Actividad($nombres[$i], $duraciones[$i]);
+			$grafo[$nombres[$i]] = new Actividad($nombres[$i], $duraciones[$i],null,null,null,null,null,null);
 			$precedencias[$i] = explode(" ", $precedencias[$i]);			
 			foreach($precedencias[$i] as $value)
 			{
@@ -208,7 +208,7 @@
 									}
 								}
 							}
-							$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0);
+							$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0,null,null,null,null,null,null);
 							$grafo["F".$nFicticias]->establecerNodoOrigen($value->getNodoDestino());
 							$grafo["F".$nFicticias]->establecerNodoDestino($value2->getNodoDestino());
 							//Añado la actividad precedente (Adrián)
@@ -339,7 +339,7 @@
 								$value->establecerNodoDestino($original);
 								$value2->establecerNodoDestino($original + 1);
 								
-								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0);
+								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0,null,null,null,null,null,null);
 								$grafo["F".$nFicticias]->establecerNodoOrigen($value->getNodoDestino());
 								//Añado la actividad precedente (Adrián)
 								$grafo["F".$nFicticias]->addActividadPrecedente($value->getID());
@@ -347,7 +347,7 @@
 								$grafo["F".$nFicticias]->setFicticia();
 								$nFicticias++;
 								
-								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0);
+								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0,null,null,null,null,null,null);
 								$grafo["F".$nFicticias]->establecerNodoOrigen($value2->getNodoDestino());
 								//Añado la actividad precedente (Adrián)
 								$grafo["F".$nFicticias]->addActividadPrecedente($value2->getID());
@@ -401,7 +401,7 @@
 									}
 								}
 								
-								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0);
+								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0,null,null,null,null,null,null);
 								$grafo["F".$nFicticias]->establecerNodoOrigen($value->getNodoDestino());
 								//Añado la actividad precedente (Adrián)
 								$grafo["F".$nFicticias]->addActividadPrecedente($value->getID());
@@ -409,7 +409,7 @@
 								$grafo["F".$nFicticias]->setFicticia();
 								$nFicticias++;
 								
-								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0);
+								$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0,null,null,null,null,null,null);
 								$grafo["F".$nFicticias]->establecerNodoOrigen($value2->getNodoDestino());
 								//Añado la actividad precedente (Adrián)
 								$grafo["F".$nFicticias]->addActividadPrecedente($value2->getID());
@@ -466,7 +466,7 @@
 					$value->establecerNodoOrigen($cambio);
 					$value2->establecerNodoOrigen($cambio + 1);
 					
-					$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0);
+					$grafo["F".$nFicticias] = new Actividad("F".$nFicticias, 0,null,null,null,null,null,null);
 					$grafo["F".$nFicticias]->establecerNodoOrigen($cambio);
 					$grafo["F".$nFicticias]->establecerNodoDestino($cambio + 1);
 					//Añado la actividad precedente (Adrián)
@@ -664,6 +664,40 @@
 		}
 		return $gv;
 	}
+    
+    /**
+     * Creación aleatoria de una actividad probabilística
+     * @param actividad identificador de la actividad
+     * @return actividad actividad aleatoria probabilística (objeto)
+     */
+    function randomActividadProbabilistica ($actividad){
+        $d=rand(1,4);
+        if ($d==1){
+            $distribucion='NORMAL';
+            $parametro_01=rand(1,25);
+            $parametro_02=rand(0,10);
+            $parametro_03=null;
+        }
+        else if($d==2){
+            $distribucion='BETA';
+            $parametro_01=rand(0,25);
+            $parametro_02=rand(0,25);
+            $parametro_03=rand(0,25);
+        }
+        else if($d==3){
+            $distribucion='TRIANGULAR';
+            $parametro_01=rand(0,25);
+            $parametro_02=rand(0,25);
+            $parametro_03=rand(0,25);
+        }
+        else{
+            $distribucion='UNIFORME';
+            $parametro_01=rand(0,25);
+            $parametro_02=rand(0,25);
+            $parametro_03=null;
+        }
+        return new Actividad($actividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);
+    }
 ?>
 	
 	

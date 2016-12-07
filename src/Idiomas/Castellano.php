@@ -94,6 +94,12 @@
 		"Generando_10"=>"¿Qué actividades forman parte del camino crítico? (sepáralas por comas)",
 		"Generando_11"=>"Resolver",
 		"Generando_12"=>"Evaluación",
+		"Generando_13"=>"Distribución",
+		"Generando_14"=>"Media",
+		"Generando_15"=>"Varianza",
+		"Generando_16"=>"Parámetro 01",
+		"Generando_17"=>"Parámetro 02",
+		"Generando_18"=>"Parámetro 03",
 		
 		//Pert.php
 		"Pert_1"=>"Se ha producido un error inesperado.",

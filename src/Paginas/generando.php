@@ -58,59 +58,78 @@
 					$probabilidad = $_POST["probabilidad"];
 					$ids = array(0 => "A", 1 => "B", 2 => "C", 3 => "D", 4 => "E", 5 => "F", 6 => "G", 7 => "H", 8 => "I", 9 => "J", 10 => "K", 11 => "L", 12 => "M", 13 => "N", 14 => "O", 15 => "P", 16 => "Q", 17 => "R", 18 => "S", 19 => "T", 20 => "U", 21 => "V", 22 => "W", 23 => "X", 24 => "Y", 25 => "Z");
 					
-					//Insertamos el nuevo grafo en la BD
-					$consulta = "INSERT INTO grafos(ID_GRAFO, ID_USUARIO, RESOLUCION, CALIFICACION, FECHA) VALUES(0, {$_SESSION["id_usuario"]}, UPPER('{$metodo}'), NULL, NOW());";
-					$result = $conexion->query($consulta);
-					
-					$idGrafo = $conexion->insert_id;
-					
-					//Generamos la tabla de precedencias					
-					for($i = 0; $i < $numAct; $i++)
-					{
-						array_push($nombres, $ids[$i]);
+					//Variable para controlar si hay que generar un nuevo grafo
+					$generarNuevoGrafo=true;
+					while($generarNuevoGrafo){
+						//Insertamos el nuevo grafo en la BD
+						$consulta = "INSERT INTO grafos(ID_GRAFO, ID_USUARIO, RESOLUCION, CALIFICACION, FECHA) VALUES(0, {$_SESSION["id_usuario"]}, UPPER('{$metodo}'), NULL, NOW());";
+						$result = $conexion->query($consulta);
 						
-						$p = "";
-						for($j = 0; $j < $i; $j++)
+						$idGrafo = $conexion->insert_id;
+						
+						//Generamos la tabla de precedencias					
+						for($i = 0; $i < $numAct; $i++)
 						{
-							if($j != $i)
+							array_push($nombres, $ids[$i]);
+							
+							$p = "";
+							for($j = 0; $j < $i; $j++)
 							{
-								if(rand(1,100) <= $probabilidad)
+								if($j != $i)
 								{
-									if($p == "")
+									if(rand(1,100) <= $probabilidad)
 									{
-										$p = $nombres[$j];
-									}
-									else
-									{
-										$p = $p." ".$nombres[$j];
+										if($p == "")
+										{
+											$p = $nombres[$j];
+										}
+										else
+										{
+											$p = $p." ".$nombres[$j];
+										}
 									}
 								}
 							}
-						}
-						
-						array_push($precedencias, $p);
+							
+							array_push($precedencias, $p);
 
-						//Generar actividad auxiliar dependiento del método de resolución
-						if($metodo == "pert_probabilistico"){
-							$actividad=randomActividadProbabilistica($ids[$i]);
+							//Generar actividad auxiliar dependiento del método de resolución
+							if($metodo == "pert_probabilistico"){
+								$actividad=randomActividadProbabilistica($ids[$i]);
+							}
+							else{
+								$actividad=new Actividad($ids[$i], rand(1,25),null,null,null,null,null,null);
+							}
+							array_push($actividades, $actividad);
+							
+							$duracionNodo = $actividad->getDuracion();
+							array_push($duraciones, $duracionNodo);
+							
+							//Guardamos cada uno de los nodos generados en la BD
+							$null01 = is_null($actividad->getDistribucion())?'NULL':"'".$actividad->getDistribucion()."'";
+							$null02 = is_null($actividad->getMedia())?'NULL':$actividad->getMedia();
+							$null03 = is_null($actividad->getVarianza())?'NULL':$actividad->getVarianza();
+							$null04 = is_null($actividad->getParametro_01())?'NULL':$actividad->getParametro_01();
+							$null05 = is_null($actividad->getParametro_02())?'NULL':$actividad->getParametro_02();
+							$null06 = is_null($actividad->getParametro_03())?'NULL':$actividad->getParametro_03();
+							$consulta = "INSERT INTO nodos(NOMBRE, ID_GRAFO, DURACION, PRECEDENCIAS, DISTRIBUCION, MEDIA, VARIANZA, PARAMETRO_01, PARAMETRO_02, PARAMETRO_03) VALUES('{$ids[$i]}', {$idGrafo}, {$duracionNodo}, '{$p}', {$null01}, {$null02}, {$null03}, {$null04}, {$null05}, {$null06});";
+							$conexion->query($consulta);
+						}
+						//Comprobar si hay que generar un nuevo grafo (PERT_PROBABILISTICO con mas de un camino crítico)
+						if($metodo=="pert_probabilistico" and numeroCaminosCriticos($nombres,$precedencias,$duraciones)>1){
+							//Procede generar otro grafo candidato
+							$nombres = array();
+							$precedencias = array();
+							$duraciones = array();
+							$actividades = array();
+							//Borrar de la base de datos el grafo generado
+							$consulta = "DELETE FROM grafos WHERE ID_GRAFO = {$idGrafo};";
+							$conexion->query($consulta);
 						}
 						else{
-							$actividad=new Actividad($ids[$i], rand(1,25),null,null,null,null,null,null);
+							//El grafo generado es válido
+							$generarNuevoGrafo=false;
 						}
-                        array_push($actividades, $actividad);
-                        
-						$duracionNodo = $actividad->getDuracion();
-						array_push($duraciones, $duracionNodo);
-						
-						//Guardamos cada uno de los nodos generados en la BD
-					    $null01 = is_null($actividad->getDistribucion())?'NULL':"'".$actividad->getDistribucion()."'";
-                        $null02 = is_null($actividad->getMedia())?'NULL':$actividad->getMedia();
-                        $null03 = is_null($actividad->getVarianza())?'NULL':$actividad->getVarianza();
-                        $null04 = is_null($actividad->getParametro_01())?'NULL':$actividad->getParametro_01();
-                        $null05 = is_null($actividad->getParametro_02())?'NULL':$actividad->getParametro_02();
-                        $null06 = is_null($actividad->getParametro_03())?'NULL':$actividad->getParametro_03();
-						$consulta = "INSERT INTO nodos(NOMBRE, ID_GRAFO, DURACION, PRECEDENCIAS, DISTRIBUCION, MEDIA, VARIANZA, PARAMETRO_01, PARAMETRO_02, PARAMETRO_03) VALUES('{$ids[$i]}', {$idGrafo}, {$duracionNodo}, '{$p}', {$null01}, {$null02}, {$null03}, {$null04}, {$null05}, {$null06});";
-						$conexion->query($consulta);
 					}
 				}
 				//Sin tampoco hay datos del formulario, entonces no tenemos datos y avisamos del error.

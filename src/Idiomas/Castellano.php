@@ -123,7 +123,22 @@
 		"Proponer_9"=>"Duración",
 		"Proponer_10"=>"Resolver ROY",
 		"Proponer_11"=>"Resolver PERT",
-		
+		"Proponer_12"=>"Elija el tipo de grafo que desea proponer:",
+        "Proponer_13"=>"Determinista",
+        "Proponer_14"=>"Estocástico",
+		"Proponer_15"=>"Continuar",
+        "Proponer_16"=>"Distribución de probabilidad:",
+        "Proponer_17"=>"Normal",
+        "Proponer_18"=>"Beta",
+        "Proponer_19"=>"Triangular",
+        "Proponer_20"=>"Uniforme",
+        "Proponer_21"=>"Parametro 1:",
+        "Proponer_22"=>"Normal(media) Beta(tiempo optimista) Triangular(a) Uniforme(mínimo)",
+        "Proponer_23"=>"Parametro 2:",
+        "Proponer_24"=>"Normal(desviación típica) Beta(tiempo pesimista) Triangular(b) Uniforme(máximo)",
+        "Proponer_25"=>"Parametro 3:",
+        "Proponer_26"=>"Normal(0=NO PROCEDE) Beta(tiempo más probable) Triangular(c) Uniforme(0=NO PROCEDE)",
+                        
 		//Historico.php
 		"Historico_1"=>"Histórico de grafos:",
 		"Historico_2"=>"Aun no existen registros de grafos.",

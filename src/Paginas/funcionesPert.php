@@ -6,6 +6,8 @@
 	
 	require_once("./Actividad.php");
 	
+	define("TOLERANCIA_HOLGURA",0.000001);
+    
 	/**
 	* Se generan actividades del grafo
 	* @param array nombres nombres de las actividades
@@ -618,7 +620,8 @@
 			{
 				$color = "black";
 				$holgura = $nodos[$value->getNodoDestino()]["tli"] - $nodos[$value->getNodoOrigen()]["tei"] - $value->getDuracion();
-				
+				if($holgura < TOLERANCIA_HOLGURA) $holgura=0;
+                
 				if($holgura == 0)
 				{
 					$color = "red";
@@ -698,6 +701,51 @@
             $parametro_03=null;
         }
         return new Actividad($actividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);
+    }
+
+    /**
+     * Calculo del numero de caminos críticos
+     * @param actividades conjunto de actividades de un grafo
+     * @return numeroCaminosCriticos cantidad de caminos críticos que contiene un grafo (integer)
+     */
+    function numeroCaminosCriticos($nombres,$precedencias,$duraciones)
+    {
+		//////////////RESOLUCION PERT////////////// (¡¡¡OJO!!! Código CLONADO de pertCorregido.php)
+		$precedenciasRoy = $precedencias;
+		/////Generamos el conjunto de Actividades////
+		$grafo = generarActividades($nombres,$precedencias,$duraciones);
+		//Establecemos las actividades posteriores
+		establecerPrecedenciasPert($grafo,$nombres, $duraciones, $precedencias);
+		$nodos = establecerFicticias($grafo,$nombres, $duraciones, $precedencias,$precedenciasRoy);
+
+		//Comprobar los caminos críticos
+        $nodoActual=1;
+        $nodoSiguiente=null;
+        $existeCaminoCritico=false;
+        $variosCaminosCriticos=false;
+        $numeroCaminosCriticos=0;
+        while ($nodoActual != null and sizeof($grafo)>0 and !$variosCaminosCriticos) {
+            $offset=0;
+            foreach ($grafo as $actividad) {
+                if($actividad->getNodoOrigen()==$nodoActual){
+                    array_splice($grafo,$offset--,1); //Quitar elemento leído
+					$holgura = $nodos[$actividad->getNodoDestino()]["tli"] - $nodos[$actividad->getNodoOrigen()]["tei"] - $actividad->getDuracion();
+                    if($holgura<TOLERANCIA_HOLGURA){
+                        $existeCaminoCritico=true;
+                        if($nodoSiguiente==null) $nodoSiguiente=$actividad->getNodoDestino();
+                        else $variosCaminosCriticos=true;
+                    }
+                }
+                $offset++;
+            }
+            $nodoActual=$nodoSiguiente;
+            $nodoSiguiente=null;
+        }
+        if($existeCaminoCritico){
+            if($variosCaminosCriticos) $numeroCaminosCriticos=2;
+            else $numeroCaminosCriticos=1;
+        }
+        return $numeroCaminosCriticos;
     }
 ?>
 	

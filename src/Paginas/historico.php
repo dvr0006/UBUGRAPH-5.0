@@ -48,7 +48,7 @@
 					//Mostramos los grafos con su fecha, tipo y puntuacion y un enlace a su resolucion
 					while($reg)
 					{
-                        $metodo=strtolower($reg["RESOLUCION"]=='roy')?'roy':'pert';
+                        $metodo=(strtolower($reg["RESOLUCION"])=='roy')?'roy':'pertCorregido';
 						echo "\n<a  href=\"./{$metodo}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/5</li></a>";
 						$reg = $res->fetch_assoc();
 					}

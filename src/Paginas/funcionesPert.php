@@ -527,6 +527,8 @@
 		$grafoRoy = generarRoy($nombres, $precedenciasRoy, $duraciones);
 		foreach($grafo as $value)
 		{
+		    // Ponemos el valor del TLI del nodo Inicio a un valor coherente
+		    $nodos[1]["tli"]=$nodos[1]["tei"];
 			if(!$value->getFicticia()){
 				$nodoRoy = $grafoRoy[$value->getID()];
 				$nodos[$value->getNodoDestino()]["tei"] = $nodoRoy->getTEI() + $nodoRoy->getDuracion();
@@ -558,7 +560,7 @@
 			if($value->getFicticia()){
 				foreach($grafo as $value2){
 					if($value->getNodoDestino() == $value2->getNodoDestino()){
-						$precedentes[$value->getID()] = $nodos[$value->getNodoOrigen()]["tei"] + $value->getDuracion();
+						$precedentes[$value2->getID()] = $nodos[$value2->getNodoOrigen()]["tei"] + $value2->getDuracion();
 					}
 				}							
 			}else

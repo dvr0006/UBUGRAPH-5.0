@@ -18,15 +18,16 @@
 	{
 		require("../".idioma());
 		//texto a mostrar en cada boton
-		$titulos = array(0=>"", 1=>"", 2=>"", 3=>"");
+		$titulos = array(0=>"", 1=>"", 2=>"", 3=>"", 4=>"");
 		$titulos[0] = $texto["Funciones_menu_1"];
 		$titulos[1] = $texto["Funciones_menu_2"];
 		$titulos[2] = $texto["Funciones_menu_3"];
 		$titulos[3] = $texto["Funciones_menu_4"];
 		$titulos[4] = $texto["Funciones_menu_5"];
+        $titulos[5] = $texto["Funciones_menu_6"];
 		
 		//Redireccion de cada boton
-		$enlaces = array(0=>"generar", 1=>"proponer", 2=>"historico", 3=>"tutoria", 4=>"generarXML");
+		$enlaces = array(0=>"generar", 1=>"proponer", 2=>"historico", 3=>"tutoria", 4=>"generarXML", 5=>"generarXMLEstocastico");
 		
 		for($i = 0; $i < count ($titulos); $i++) //Mientras queden campos en el array crea un nuevo boton
 		{
@@ -135,83 +136,128 @@
 		
 		//Mostramos las preguntas, las respuestas dadas, las correctas y el total de aciertos
 		echo "\n<h2 style=\"text-align: center;\">{$texto["Funciones_evaluar_1"]}</h2>";
-		
-		echo "\n<p>{$texto["Funciones_evaluar_2"]} {$preguntas["NOMBRE_1"]}?</p>";
-		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_1"]}</li>";
-		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_1"]}";		
-		if($correcciones["RESPUESTA_1"] == $respuestas["RESPUESTA_1"])
-		{
-			$calificacion++;
-			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+
+        //PREGUNTAS PARA GRAFOS DETERMINISTAS
+        if (isset($preguntas["NOMBRE_1"]) && isset($preguntas["NOMBRE_3"]) && isset($preguntas["NOMBRE_3"])){
+    		//Pregunta 1		
+    		echo "\n<p>{$texto["Generando_6"]} {$preguntas["NOMBRE_1"]}?</p>";
+    		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_1"]}</li>";
+    		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_1"]}";		
+    		if($correcciones["RESPUESTA_1"] == $respuestas["RESPUESTA_1"])
+    		{
+    			$calificacion++;
+    			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+    		}
+    		else
+    		{
+    			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+    		}
+    		echo "</li></ul>";
+    		
+            //Pregunta 2
+    		echo "\n<p>{$texto["Generando_7"]} {$preguntas["NOMBRE_2"]}?</p>";
+    		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_2"]}</li>";
+    		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_2"]}";
+    		if($correcciones["RESPUESTA_2"] == $respuestas["RESPUESTA_2"])
+    		{
+    			$calificacion++;
+    			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+    		}
+    		else
+    		{
+    			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+    		}
+    		echo "</li></ul>";
+    		
+            //Pregunta 3
+    		echo "\n<p>{$texto["Generando_8"]} {$preguntas["NOMBRE_3"]}?</p>";
+    		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_3"]}</li>";
+    		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_3"]}";
+    		if($correcciones["RESPUESTA_3"] == $respuestas["RESPUESTA_3"])
+    		{
+    			$calificacion++;
+    			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+    		}
+    		else
+    		{
+    			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+    		}
+    		echo "</li></ul>";
+    		
+            //Pregunta 4
+    		echo "\n<p>{$texto["Generando_9"]}</p>";
+    		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_4"]}</li>";
+    		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_4"]}";
+    		if($correcciones["RESPUESTA_4"] == $respuestas["RESPUESTA_4"])
+    		{
+    			$calificacion++;
+    			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+    		}
+    		else
+    		{
+    			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+    		}
+    		echo "</li></ul>";
+    		
+            //Pregunta 5
+    		echo "\n<p>{$texto["Generando_10"]}</p>";
+    		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_5"]}</li>";
+    		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_5"]}";
+    		
+    		$a = explode(",",$respuestas["RESPUESTA_5"]);
+    		$b = explode(",",$correcciones["RESPUESTA_5"]);
+    		
+    		if(count(array_diff($b, $a)) == 0)
+    		{
+    			$calificacion++;
+    			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+    		}
+    		else
+    		{
+    			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+    		}
+    		echo "</li></ul>";
+            
+    		//Calificación
+    		echo "\n<h2 style=\"text-align: center;\">{$texto["Funciones_evaluar_9"]} {$calificacion}/5</h2>";
 		}
-		else
-		{
-			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
-		}
-		echo "</li></ul>";
-		
-		echo "\n<p>{$texto["Funciones_evaluar_5"]} {$preguntas["NOMBRE_2"]}?</p>";
-		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_2"]}</li>";
-		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_2"]}";
-		if($correcciones["RESPUESTA_2"] == $respuestas["RESPUESTA_2"])
-		{
-			$calificacion++;
-			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
-		}
-		else
-		{
-			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
-		}
-		echo "</li></ul>";
-		
-		echo "\n<p>{$texto["Funciones_evaluar_6"]} {$preguntas["NOMBRE_3"]}?</p>";
-		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_3"]}</li>";
-		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_3"]}";
-		if($correcciones["RESPUESTA_3"] == $respuestas["RESPUESTA_3"])
-		{
-			$calificacion++;
-			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
-		}
-		else
-		{
-			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
-		}
-		echo "</li></ul>";
-		
-		echo "\n<p>{$texto["Funciones_evaluar_7"]}</p>";
-		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_4"]}</li>";
-		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_4"]}";
-		if($correcciones["RESPUESTA_4"] == $respuestas["RESPUESTA_4"])
-		{
-			$calificacion++;
-			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
-		}
-		else
-		{
-			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
-		}
-		echo "</li></ul>";
-		
-		echo "\n<p>{$texto["Funciones_evaluar_8"]}</p>";
-		echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_5"]}</li>";
-		echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_5"]}";
-		
-		$a = explode(",",$respuestas["RESPUESTA_5"]);
-		$b = explode(",",$correcciones["RESPUESTA_5"]);
-		
-		if(count(array_diff($b, $a)) == 0)
-		{
-			$calificacion++;
-			echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
-		}
-		else
-		{
-			echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
-		}
-		echo "</li></ul>";
-		
-		echo "\n<h2 style=\"text-align: center;\">{$texto["Funciones_evaluar_9"]} {$calificacion}/5</h2>";
-		
+
+        //PREGUNTAS ESTOCÁSTICAS
+        //TODO Generar preguntas estocasticas en la evaluación (usar valores del folio para la internacionalización)
+        if (isset($preguntas["TIEMPO_FIN"]) && isset($preguntas["RIESGO"])){
+            //Pregunta Tiempo_Fin
+            echo "\n<p>{$texto["Generando_19"]} {$preguntas["TIEMPO_FIN"]} {$texto["Generando_20"]}</p>";
+            echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_TIEMPO"]}</li>";
+            echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_TIEMPO"]}";      
+            if($correcciones["RESPUESTA_TIEMPO"] == $respuestas["RESPUESTA_TIEMPO"])
+            {
+                $calificacion++;
+                echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+            }
+            else
+            {
+                echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+            }
+            echo "</li></ul>";
+                   
+            //Pregunta Riesgo
+            echo "\n<p>{$texto["Generando_21"]} {$preguntas["RIESGO"]}{$texto["Generando_22"]}</p>";
+            echo "\n<ul><li>{$texto["Funciones_evaluar_3"]} {$correcciones["RESPUESTA_RIESGO"]}</li>";
+            echo "\n<li>{$texto["Funciones_evaluar_4"]} {$respuestas["RESPUESTA_RIESGO"]}";      
+            if($correcciones["RESPUESTA_RIESGO"] == $respuestas["RESPUESTA_RIESGO"])
+            {
+                $calificacion++;
+                echo  "<img class=\"logo\" src=\"../imagenes/bien.png\" alt=\"bien\">";
+            }
+            else
+            {
+                echo  "<img class=\"logo\" src=\"../imagenes/mal.png\" alt=\"mal\">";
+            }
+            echo "</li></ul>";
+
+            //Calificación
+            echo "\n<h2 style=\"text-align: center;\">{$texto["Funciones_evaluar_9"]} {$calificacion}/2</h2>";
+        }		
 		//Comprobamos si es necesario guardar la calificacion en la bd
 		$consulta = "SELECT * FROM grafos WHERE CALIFICACION IS NULL AND ID_GRAFO = {$idGrafo};";
 		$result = $conexion->query($consulta);

@@ -1,6 +1,5 @@
--- Modificaciones a la base de datos para la versión UBUGraph 5.0
--- a partir de la estructura UBUGraph 4.0
--- -------------------------------------------------------------------------------------
+-- Modificaciones a la base de datos para la versión UBUGraph 5.0 a partir de la estructura UBUGraph 4.0
+-- -----------------------------------------------------------------------------------------------------
 -- Tabla NODOS
 -- Añadir atributos para representar parámetros de distintas distribuciones de probabilidad
 ALTER TABLE `nodos` ADD `DISTRIBUCION` ENUM('NORMAL','BETA','TRIANGULAR','UNIFORME') CHARACTER SET utf8 COLLATE utf8_spanish2_ci NULL , 

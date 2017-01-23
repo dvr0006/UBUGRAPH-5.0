@@ -100,7 +100,11 @@
 		"Generando_16"=>"Parameter 01",
 		"Generando_17"=>"Parameter 02",
 		"Generando_18"=>"Parameter 03",
-		
+        "Generando_19"=>"¿Qué probabilidad tenemos de que el proyecto finalice antes de ",
+        "Generando_20"=>" unidades de tiempo?",
+        "Generando_21"=>"Si deseamos un ",
+        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos?",
+        
 		//Pert.php
 		"Pert_1"=>"Es ist ein unerwarteter Fehler aufgetreten.",
 		"Pert_2"=>"Es ist ein unerwarteter Fehler aufgetreten.",
@@ -123,6 +127,21 @@
 		"Proponer_9"=>"Dauer",
 		"Proponer_10"=>"Lösen ROY",
 		"Proponer_11"=>"Lösen PERT",
+		"Proponer_12"=>"wählen Sie den Typ von graph dass Sie wollen vorschlagen:",
+        "Proponer_13"=>"Deterministisch",
+        "Proponer_14"=>"Stochastische",
+		"Proponer_15"=>"Weitermachen",
+        "Proponer_16"=>"Wahrscheinlichkeitsverteilung:",
+        "Proponer_17"=>"Regelmäßig",
+        "Proponer_18"=>"Beta",
+        "Proponer_19"=>"Dreieckig",
+        "Proponer_20"=>"Gleichmäßig",
+        "Proponer_21"=>"Parameter 1:",
+        "Proponer_22"=>"Regelmäßig(durchschnitt) Beta(zeit optimistisch) Dreieckig(a) Gleichmäßig(minimun)",
+        "Proponer_23"=>"Parameter 2:",
+        "Proponer_24"=>"Regelmäßig(Ablenkung typisch) Beta(zeit pessimistisch) Dreieckig(b) Gleichmäßig(maximun)",
+        "Proponer_25"=>"Parameter 3:",
+        "Proponer_26"=>"Regelmäßig(0=NICHT ANWENDBAR) Beta(zeit besser mutmaßlich) Dreieckig(c) Gleichmäßig(0=NICHT ANWENDBAR)",
 		
 		//Historico.php
 		"Historico_1"=>"Graphverlauf:",
@@ -164,6 +183,7 @@
 		"Funciones_menu_3"=>"Verlauf",
 		"Funciones_menu_4"=>"Tutoria",
         "Funciones_menu_5"=>"Generieren XML",
+        "Funciones_menu_6"=>"Generieren XML Stochastische",
 				
 		"Funciones_cabecera_1"=>"Eingeloggt als",
 		

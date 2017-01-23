@@ -100,7 +100,11 @@
 		"Generando_16"=>"Parámetro 01",
 		"Generando_17"=>"Parámetro 02",
 		"Generando_18"=>"Parámetro 03",
-		
+		"Generando_19"=>"¿Qué probabilidad tenemos de que el proyecto finalice antes de ",
+		"Generando_20"=>" unidades de tiempo?",
+        "Generando_21"=>"Si deseamos un ",
+        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos a finalizar el proyecto?",
+        				
 		//Pert.php
 		"Pert_1"=>"Se ha producido un error inesperado.",
 		"Pert_2"=>"Se ha producido un error inesperado.",
@@ -179,17 +183,13 @@
 		"Funciones_menu_3"=>"Histórico",
 		"Funciones_menu_4"=>"Tutoria",
 		"Funciones_menu_5"=>"Generar XML",
+		"Funciones_menu_6"=>"Generar XML Estocástico",
 		
 		"Funciones_cabecera_1"=>"Logueado como",
 		
 		"Funciones_evaluar_1"=>"Evaluación",
-		"Funciones_evaluar_2"=>"¿Cuál es la holgura de la actividad",
 		"Funciones_evaluar_3"=>"Respuesta correcta:",
 		"Funciones_evaluar_4"=>"Tu respuesta:",
-		"Funciones_evaluar_5"=>"¿Cuál es tiempo early de inicio de la actividad",
-		"Funciones_evaluar_6"=>"¿Cuál es tiempo late de fin de la actividad",
-		"Funciones_evaluar_7"=>"¿Cuál es tiempo early de finalización?",
-		"Funciones_evaluar_8"=>"¿Qué actividades forman parte del camino crítico? (sepáralas por comas)",
 		"Funciones_evaluar_9"=>"Tu puntuación:",
 		
 		//Administracion.php

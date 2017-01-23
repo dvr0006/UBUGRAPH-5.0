@@ -157,7 +157,88 @@
 		$respuesta = $nodosCriticos;
 		return array("pregunta"=>$pregunta,"respuesta"=>$respuesta,"nombres"=>$nombres);
 	}
-	
+
+    /**
+    * Se genera una pregunta numérica aleatoria
+    * @param array nombres nombres de las actividades
+    * @param grafo grafo con las actividades 
+    * @return preg_resp array con la pregunta y la respuesta
+    */
+    function generarPreguntaNumericaEstocastica($nombres,$grafo){
+        $m = new Mustache_Engine;
+        $preguntas = array("¿Cuál es la probabilidad de que el proyecto acabe en el momento {{momento}}?","¿En qué momento acabará el proyecto con un {{probabilidad}} de probabilidad?");
+        $pos = rand(0,sizeof($preguntas)-1);
+        $pregunta = $preguntas[$pos];
+        if($pos == 0){
+            $actividadAleatoria = $nombres[rand(0,sizeof($nombres)-1)];
+            $actividad = array("actividad"=>$actividadAleatoria);
+            $respuesta = $grafo[$actividadAleatoria]->getHolguraTotal();
+            $pregunta = $m->render($pregunta,$actividad);
+        } else {
+            $respuesta = $grafo["Fin"]->getTLI();
+        }
+        return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);            
+    }
+    
+    /**
+    * Se genera una pregunta de verdadero o falso
+    * @param grafo grafo con las actividades 
+    * @return preg_resp array con la pregunta y la respuesta
+    */
+    function generarPreguntaVFEstocastica($grafo){
+        $numFicticias = 0;
+        foreach($grafo as $value){
+            if($value->getFicticia())
+                $numFicticias++;
+        }
+        $nFicticiasPreg = rand(0,$numFicticias);
+        if($numFicticias == $nFicticiasPreg){
+            $respuesta = true;
+        }else
+            $respuesta = false;
+        $pregunta = "¿Es cierto que el proyecto acabará en el día {{dia}} con un {{probabilidad}} de probabilidad?";
+        return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);    
+    }
+    
+    /**
+    * Se genera una pregunta de selección múltiple con una solo respuesta
+    * @param grafo grafo con las actividades 
+    * @return preg_resp array con la pregunta y la respuesta
+    */
+    function generarPreguntaSelSimpleEstocastica($grafo){
+        $nodosCriticos = 0;
+        foreach($grafo as $value){
+            if($value->getID() != "Inicio" && $value->getID() != "Fin"){
+                $nombre = $value->getID();
+                if($value->getCritico()){
+                    $nodosCriticos++;
+                }               
+            }
+        }
+        $pregunta = "¿Cuántas actividades forman parte del (los) camino(s) crítico(s)? (si hubiese varios sume las actividades).";
+        $respuesta = $nodosCriticos;
+        return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);
+    }
+    
+    /**
+    * Se genera una pregunta de selección múltiple con varias respuestas
+    * @param array nombres nombres de las actividades
+    * @param grafo grafo con las actividades 
+    * @return preg_resp array con la pregunta y la respuesta
+    */
+    function generarPreguntaSelMultEstocastica($nombres,$grafo){
+        $nodosCriticos = array();
+        foreach($grafo as $value){
+            if($value->getID() != "Inicio" && $value->getID() != "Fin"){
+                if($value->getCritico()){
+                    array_push($nodosCriticos,$value->getID());
+                }               
+            }
+        }
+        $pregunta = "Seleccione el instante en el que acabará el proyecto con un {{probabilidad}} de probabilidad.";
+        $respuesta = $nodosCriticos;
+        return array("pregunta"=>$pregunta,"respuesta"=>$respuesta,"nombres"=>$nombres);
+    }
 	/**
 	* Se escribe la pregunta con el formato adecuado (XML) en un fichero
 	* @param file archivo donde se va a escribir

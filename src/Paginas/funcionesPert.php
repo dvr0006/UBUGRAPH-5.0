@@ -527,8 +527,6 @@
 		$grafoRoy = generarRoy($nombres, $precedenciasRoy, $duraciones);
 		foreach($grafo as $value)
 		{
-		    // Ponemos el valor del TLI del nodo Inicio a un valor coherente
-		    $nodos[1]["tli"]=$nodos[1]["tei"];
 			if(!$value->getFicticia()){
 				$nodoRoy = $grafoRoy[$value->getID()];
 				$nodos[$value->getNodoDestino()]["tei"] = $nodoRoy->getTEI() + $nodoRoy->getDuracion();
@@ -567,6 +565,8 @@
 				continue;
 			$nodos[$value->getNodoDestino()]["tei"] = max($precedentes);
 		}
+        //Corregir valor "tli" del nodo inicial
+        $nodos[1]["tli"]=0;
 		return $nodos;
 	}
 	
@@ -595,6 +595,9 @@
 	* @return gv grafo PERT resuelto
 	*/
 	function generarGrafoPert($grafo,$nodos,$resolver = false,$conexion = null,$preguntas = null) {
+	    //Flag para saber si proceden las preguntas deterministas
+        $resolverDeterminista=isset($preguntas["NOMBRE_1"]) && isset($preguntas["NOMBRE_2"]) && isset($preguntas["NOMBRE_3"]);
+		//Generacion del objeto gráfico de la librería GraphViz
 		$gv = new Image_GraphViz(true, array("rankdir"=>"LR", "size"=>"8.333,11.111!"), "PERT", false, false);
 		//Añadimos los nodos al grafo
 		for($i = 1; $i <= count($nodos); $i++)
@@ -602,7 +605,7 @@
 			$gv->addNode($i, array("label"=>"({$nodos[$i]["tei"]}){$i}({$nodos[$i]["tli"]})"));
 			
 			//Si es necesario obtenemos la respuesta a la pregunta 4
-			if($resolver){
+			if($resolver && $resolverDeterminista){
 				if($i == count($nodos))
 				{
 					$respuesta4 = $nodos[$i]["tei"];
@@ -610,7 +613,10 @@
 			}
 		}
 		
-		$respuesta5 = "";
+		if($resolverDeterminista)
+		{
+		    $respuesta5 = "";
+        }
 		//Añadimos los arcos
 		foreach($grafo as $value)
 		{
@@ -629,18 +635,18 @@
 					$color = "red";
 					
 					//Si es necesario obtenemos la respuesta a la pregunta 5
-					if(($respuesta5 != "") && $resolver)
+					if($resolver && $resolverDeterminista && $respuesta5 != "")
 					{
 						$respuesta5 = $respuesta5.",";
 					}
-					if($resolver)
+					if($resolver && $resolverDeterminista)
 					{
 						$respuesta5 = $respuesta5.$value->getID();
 					}
 				}
 				
 				//Si es necesario obtenemos la respuesta a las pregunta 1 2 3
-				if($resolver)
+				if($resolver && $resolverDeterminista)
 				{
 					if($value->getID() == $preguntas["NOMBRE_1"])
 					{
@@ -661,8 +667,8 @@
 				$gv->addEdge(array($value->getNodoOrigen() => $value->getNodoDestino()), array("color" => $color, "label" => $value->getID()."(".$value->getDuracion().")[>{$holgura}<]"));
 			}
 		}
-			//Si es necesario guardamos las respuestas correctas en la BD
-		if($resolver)
+		//Si es necesario guardamos las respuestas correctas en la BD
+		if($resolver && $resolverDeterminista)
 		{
 			$consulta = "INSERT INTO respuestas_correctas(ID_GRAFO, RESPUESTA_1, RESPUESTA_2, RESPUESTA_3, RESPUESTA_4, RESPUESTA_5) VALUES({$preguntas["ID_GRAFO"]}, {$respuesta1}, {$respuesta2}, {$respuesta3}, {$respuesta4}, '{$respuesta5}');";
 			$conexion->query($consulta);
@@ -707,10 +713,14 @@
 
     /**
      * Calculo del numero de caminos críticos
-     * @param actividades conjunto de actividades de un grafo
-     * @return numeroCaminosCriticos cantidad de caminos críticos que contiene un grafo (integer)
+     * @param nombres nombres de las actividades del grafo
+     * @param precendencias precedencias de las actividades de un grafo
+     * @param duraciones duraciones de las actividades del grafo
+     * @param idGrafo identificador del grafo en la base de datos
+     * @param conexion conexion a al base de datos
+     * @return infoCaminosCriticos array de información  del /de los caminos críticos de un grafo (integer), media_critica(double) y varianza_critica(double)
      */
-    function numeroCaminosCriticos($nombres,$precedencias,$duraciones)
+    function infoCaminosCriticos($nombres,$precedencias,$duraciones,$idGrafo,$conexion)
     {
 		//////////////RESOLUCION PERT////////////// (¡¡¡OJO!!! Código CLONADO de pertCorregido.php)
 		$precedenciasRoy = $precedencias;
@@ -721,21 +731,32 @@
 		$nodos = establecerFicticias($grafo,$nombres, $duraciones, $precedencias,$precedenciasRoy);
 
 		//Comprobar los caminos críticos
+		$ultimoNodo=count($nodos);
         $nodoActual=1;
         $nodoSiguiente=null;
         $existeCaminoCritico=false;
         $variosCaminosCriticos=false;
         $numeroCaminosCriticos=0;
-        while ($nodoActual != null and sizeof($grafo)>0 and !$variosCaminosCriticos) {
+        $media_critica=0;
+        $varianza_critica=0;
+        while ($nodoActual != null and $nodoActual!=$ultimoNodo and sizeof($grafo)>0 and !$variosCaminosCriticos) {
+            $existeCaminoCritico=false;
             $offset=0;
             foreach ($grafo as $actividad) {
                 if($actividad->getNodoOrigen()==$nodoActual){
                     array_splice($grafo,$offset--,1); //Quitar elemento leído
 					$holgura = $nodos[$actividad->getNodoDestino()]["tli"] - $nodos[$actividad->getNodoOrigen()]["tei"] - $actividad->getDuracion();
-                    if($holgura<TOLERANCIA_HOLGURA){
+                    if($holgura<TOLERANCIA_HOLGURA and !$actividad->getFicticia()){
                         $existeCaminoCritico=true;
                         if($nodoSiguiente==null) $nodoSiguiente=$actividad->getNodoDestino();
                         else $variosCaminosCriticos=true;
+                        //Media y varianza del camino crítico
+                        //Ejecutar SELECT para acceder a los valores de media y varianza
+                        $consulta = "SELECT media, varianza from nodos WHERE ID_GRAFO = {$idGrafo} and NOMBRE = '{$actividad->getID()}'";     
+                        $result = $conexion->query($consulta);
+                        $row=$result->fetch_assoc();
+                        $media_critica+=$row["media"];
+                        $varianza_critica+=$row["varianza"];
                     }
                 }
                 $offset++;
@@ -747,7 +768,11 @@
             if($variosCaminosCriticos) $numeroCaminosCriticos=2;
             else $numeroCaminosCriticos=1;
         }
-        return $numeroCaminosCriticos;
+        $infoCaminosCriticos=array();
+        array_push($infoCaminosCriticos, $numeroCaminosCriticos);
+        array_push($infoCaminosCriticos, $media_critica);
+        array_push($infoCaminosCriticos, $varianza_critica);
+        return $infoCaminosCriticos;
     }
 ?>
 	

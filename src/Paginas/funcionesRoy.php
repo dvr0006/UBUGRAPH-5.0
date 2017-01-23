@@ -1,6 +1,6 @@
 <?php
 	/**
-	* @author Adriï¿½n Santamarï¿½a Leal
+	* @author Adrián Santamaría Leal
 	*/
 	require_once ("Image/GraphViz.php");
 	require_once ("./Nodo.php");
@@ -115,7 +115,7 @@
 		calcularTEI($grafo, $grafo["Inicio"]);
 		foreach($grafo as $value)
 		{
-            $value->setTLI($grafo["Fin"]->getTEI());
+			$value->setTLI($grafo["Fin"]->getTEI());
 		}	
 		calcularTLI($grafo, $grafo["Fin"]);
 	}
@@ -132,7 +132,7 @@
 	function generarGrafoRoy($grafo,$resolver=false,$conexion = null,$preguntas = null){
 		$gv = new Image_GraphViz(true, array("rankdir"=>"LR", "size"=>"8.333,11.111!"), "ROY", false, false);
 		
-		//Aï¿½adimos los nodos al grafo
+		//Añadimos los nodos al grafo
 		foreach($grafo as $value)
 		{
 			//$gv->addNode($value->getID(), array("shape"=>"box"));
@@ -144,7 +144,7 @@
 			}
 		}
 		$respuesta5 = "";
-		//Aï¿½adimos los arcos
+		//Añadimos los arcos
 		foreach($grafo as $value)
 		{
 			foreach($value->getPrecedentes() as $p)
@@ -212,7 +212,7 @@
 	
 	/**
 	* Se genera una tabla de precedencias aleatoria
-	* @param int numAct nï¿½mero de actividades
+	* @param int numAct número de actividades
 	* @param int probabilidad probabibilidad de enlace
 	* @param array nombres nombres de los nodos
 	* @param array precedencias precedencias de cada nodo

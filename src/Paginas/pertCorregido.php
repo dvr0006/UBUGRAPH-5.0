@@ -75,9 +75,7 @@
 				$resolver = false;
 				
 				//Si necesitamos obtener las respuestas correctas a las preguntas (resolver) comprobamos que tambien tenemos las respuestas que ha dado el usuario.
-				$resolverDeterminista=(isset($_POST["resolver"])) && (isset($_POST["pregunta1"])) && (isset($_POST["pregunta2"])) && (isset($_POST["pregunta3"])) && (isset($_POST["pregunta4"])) && (isset($_POST["pregunta5"]));
-                $resolverEstocastico=(isset($_POST["resolver"])) && (isset($_POST["pregunta_tiempo"])) && (isset($_POST["pregunta_riesgo"]));
-				if ($resolverDeterminista || $resolverEstocastico)
+				if ((isset($_POST["resolver"])) && (isset($_POST["pregunta1"])) && (isset($_POST["pregunta2"])) && (isset($_POST["pregunta3"])) && (isset($_POST["pregunta4"])) && (isset($_POST["pregunta5"])))
 				{	
 					$resolver = true;
 					$conexion = conectarse();
@@ -89,17 +87,8 @@
 					//Si las respuestas no están almacenadas lo hacemos ahora.
 					if($tuplas == 0)
 					{
-					    if($resolverDeterminista){
-                            $consulta = "INSERT INTO respuestas(ID_GRAFO, RESPUESTA_1, RESPUESTA_2, RESPUESTA_3, RESPUESTA_4, RESPUESTA_5) VALUES((SELECT ID_GRAFO FROM grafos WHERE CALIFICACION IS NULL AND ID_USUARIO = {$_SESSION["id_usuario"]}), {$_POST["pregunta1"]}, {$_POST["pregunta2"]}, {$_POST["pregunta3"]}, {$_POST["pregunta4"]}, UPPER(REPLACE('{$_POST["pregunta5"]}', ' ', '')))";
-					    }
-                        elseif ($resolverEstocastico){
-                            $consulta = "INSERT INTO respuestas(ID_GRAFO, RESPUESTA_TIEMPO, RESPUESTA_RIESGO) VALUES((SELECT ID_GRAFO FROM grafos WHERE CALIFICACION IS NULL AND ID_USUARIO = {$_SESSION["id_usuario"]}), {$_POST["pregunta_tiempo"]}, {$_POST["pregunta_riesgo"]})";
-                        }
-                        else{
-                            mysqli_close($conexion);
-                            header("Location: ../paginas/error.php?e=".urlencode($texto["Pert_2"]));
-                        }
-                        $conexion->query($consulta);                        
+						$consulta = "INSERT INTO respuestas(ID_GRAFO, RESPUESTA_1, RESPUESTA_2, RESPUESTA_3, RESPUESTA_4, RESPUESTA_5) VALUES((SELECT ID_GRAFO FROM grafos WHERE CALIFICACION IS NULL AND ID_USUARIO = {$_SESSION["id_usuario"]}), {$_POST["pregunta1"]}, {$_POST["pregunta2"]}, {$_POST["pregunta3"]}, {$_POST["pregunta4"]}, UPPER(REPLACE('{$_POST["pregunta5"]}', ' ', '')))";
+						$conexion->query($consulta);
 					}
 					
 					//Buscamos las preguntas del grafo.

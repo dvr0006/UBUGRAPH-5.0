@@ -49,12 +49,7 @@
 					while($reg)
 					{
                         $metodo=(strtolower($reg["RESOLUCION"])=='roy')?'roy':'pertCorregido';
-                        if(strtolower($reg["RESOLUCION"])=='pert_probabilistico'){
-                            echo "\n<a  href=\"./{$metodo}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/2</li></a>";                        
-                        }
-                        else{
-                            echo "\n<a  href=\"./{$metodo}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/5</li></a>";
-                        }
+						echo "\n<a  href=\"./{$metodo}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/5</li></a>";
 						$reg = $res->fetch_assoc();
 					}
 					echo "\n</ul>";

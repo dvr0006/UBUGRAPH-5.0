@@ -11,7 +11,6 @@
 	//Cargamos el idioma
 	require_once("../".idioma());
 	require_once("./Actividad.php");
-    require_once("StandardNormal.php");
 ?>
 <html>	
 	<head>
@@ -27,9 +26,6 @@
 				
 				$conexion = conectarse();
 				
-                $mediaCritica=0;
-                $varianzaCritica=0;
-                
 				//Buscamos primero si hay grafos pendientes de resolver para este usuario.
 				$consulta = "SELECT * FROM grafos WHERE CALIFICACION IS NULL AND ID_USUARIO = {$_SESSION["id_usuario"]};";
 				$result = $conexion->query($consulta);
@@ -119,21 +115,16 @@
 							$consulta = "INSERT INTO nodos(NOMBRE, ID_GRAFO, DURACION, PRECEDENCIAS, DISTRIBUCION, MEDIA, VARIANZA, PARAMETRO_01, PARAMETRO_02, PARAMETRO_03) VALUES('{$ids[$i]}', {$idGrafo}, {$duracionNodo}, '{$p}', {$null01}, {$null02}, {$null03}, {$null04}, {$null05}, {$null06});";
 							$conexion->query($consulta);
 						}
-                        //Comprobar si hay que generar un nuevo grafo (solo queremos grafos con un único camino crítico)
-                        //Porque vamos a preguntar al alumno por datos del camino crítico
-                        $info=infoCaminosCriticos($nombres, $precedencias, $duraciones, $idGrafo, $conexion);
-                        $numCaminosCriticos=$info[0];
-                        $mediaCritica=$info[1];
-                        $varianzaCritica=$info[2];
-						if($numCaminosCriticos!=1){
-                            //Procede generar otro grafo candidato
-                            $nombres = array();
-                            $precedencias = array();
-                            $duraciones = array();
-                            $actividades = array();
-                            //Borrar de la base de datos el grafo generado
-                            $consulta = "DELETE FROM grafos WHERE ID_GRAFO = {$idGrafo};";
-                            $conexion->query($consulta);
+						//Comprobar si hay que generar un nuevo grafo (PERT_PROBABILISTICO con mas de un camino crítico)
+						if($metodo=="pert_probabilistico" and numeroCaminosCriticos($nombres,$precedencias,$duraciones)>1){
+							//Procede generar otro grafo candidato
+							$nombres = array();
+							$precedencias = array();
+							$duraciones = array();
+							$actividades = array();
+							//Borrar de la base de datos el grafo generado
+							$consulta = "DELETE FROM grafos WHERE ID_GRAFO = {$idGrafo};";
+							$conexion->query($consulta);
 						}
 						else{
 							//El grafo generado es válido
@@ -180,7 +171,7 @@
 						echo "\n</tr>";
 					}
 				echo "\n</table><br>";
-				$metodoOriginal=$metodo;
+				
 				if ($metodo == "pert" || $metodo == "pert_probabilistico")
 					$metodo = "pertCorregido";
 				
@@ -205,62 +196,22 @@
 				//Si no las hay las generamos ahora
 				if($tuplas == 0)
 				{
-				    if($metodoOriginal=="pert_probabilistico"){
-				        //Generar preguntas probabilísticas
-
-				        //Pregunta 6
-				        //Necesitamos un tiempo de finalización de proyecto que generamos aleatoriamente entre un rango de la media crítica mas 1 sigma y la media crítica mas 3 sigmas.
-				        //Despues calculamos la probabilidad de que el proyecto acabe antes o en el momento de fin de proyecto generado anteriormente.
-				        $desviacion=sqrt($varianzaCritica);
-				        $p6=rand($mediaCritica+$desviacion,$mediaCritica+3*$desviacion);
-                        $valorTipificado=($p6-$mediaCritica)/$desviacion;
-                        $probabilidad=round(StandardNormal::getZScoreProbability($valorTipificado)*100,2);
-                        $r6=$probabilidad;
-            
-                        //Pregunta 7
-                        //Necesitamos una probabilidad que generamos aleatoriamente entre un 80% y un 99.9% (29 valores).
-                        //Después calculamos el valor tipificado para esa probabilidad y hallamos el valor destipificado correspondiente al tiempo de finalización del proyecto.
-                        $valorAleatorio=rand(1,29); 
-				        $p7=StandardNormal::getProbabilidadAleatoria($valorAleatorio);
-                        //Si la probabilidad elegida al azar tiene decimales
-                        if($p7>99){
-                            $valorZ=StandardNormal::getZScoreForConfidenceInterval((String)$p7);
-                        }
-                        else{
-                            $valorZ=StandardNormal::getZScoreForConfidenceInterval($p7);
-                        }
-				        $r7=round($valorZ*$desviacion+$mediaCritica);
-                        //Guardamos las preguntas en la base de datos
-                        $consulta = "INSERT INTO preguntas(ID_GRAFO, TIEMPO_FIN, RIESGO) VALUES({$idGrafo}, '{$p6}', '{$p7}');";
-                        $conexion->query($consulta);
-                        //Guardamos las respuestas correctas en la base de datos
-                        $consulta = "INSERT INTO respuestas_correctas(ID_GRAFO, RESPUESTA_TIEMPO, RESPUESTA_RIESGO) VALUES({$idGrafo}, '{$r6}', '{$r7}');";
-                        $conexion->query($consulta);
-				    }
-                    else{
-                        $x = $nombres[rand(0,count($nombres) -1)];
-                        $y = $nombres[rand(0,count($nombres) -1)];
-                        $z = $nombres[rand(0,count($nombres) -1)];
-                        //Y las guardamos en la BD
-                        $consulta = "INSERT INTO preguntas(ID_GRAFO, NOMBRE_1, NOMBRE_2, NOMBRE_3) VALUES({$idGrafo}, '{$x}', '{$y}', '{$z}');";
-                        $conexion->query($consulta);
-                    }
+					$x = $nombres[rand(0,count($nombres) -1)];
+					$y = $nombres[rand(0,count($nombres) -1)];
+					$z = $nombres[rand(0,count($nombres) -1)];
 					
+					//Y las guardamos en la BD
+					$consulta = "INSERT INTO preguntas(ID_GRAFO, NOMBRE_1, NOMBRE_2, NOMBRE_3) VALUES({$idGrafo}, '{$x}', '{$y}', '{$z}');";
+					$conexion->query($consulta);
 				}
 				//Si si que las hay, simplemente las leemos
 				else
 				{
 					$res = $result->fetch_assoc();
 					
-                    if($metodoOriginal=="pert_probabilistico"){
-                        $p6 = $res["TIEMPO_FIN"];
-                        $p7 = $res["RIESGO"];
-                    }
-                    else{
-                        $x = $res["NOMBRE_1"];
-                        $y = $res["NOMBRE_2"];
-                        $z = $res["NOMBRE_3"];
-                    }
+					$x = $res["NOMBRE_1"];
+					$y = $res["NOMBRE_2"];
+					$z = $res["NOMBRE_3"];
 				}
 		
 				//Cerramos la conexion con la BD
@@ -269,29 +220,20 @@
 				//Mostramos al usuario las preguntas que debe responder y los campos para hacerlo.
 				echo "\n<h2 style=\"text-align: center;\">{$texto["Generando_12"]}</h2>";
 				
-                if($metodoOriginal=="pert_probabilistico"){
-                    echo "\n<label>{$texto["Generando_19"]} {$p6}{$texto["Generando_20"]}</label>";
-                    echo "<input type=\"number\" required step=\"0.01\" name=\"pregunta_tiempo\" min=\"0\" value=\"-1\"><br>";
-
-                    echo "\n<label>{$texto["Generando_21"]} {$p7}{$texto["Generando_22"]}</label>";
-                    echo "<input type=\"number\" required step=\"1\" name=\"pregunta_riesgo\" min=\"0\" value=\"-1\"><br>";
-                }
-                else{
-                    echo "\n<label>{$texto["Generando_6"]} {$x}?</label>";
-                    echo "<input type=\"number\" required step=\"1\" name=\"pregunta1\" min=\"0\" value=\"-1\"><br>";
-                    
-                    echo "\n<label>{$texto["Generando_7"]} {$y}?</label>";
-                    echo "<input type=\"number\" required step=\"1\" name=\"pregunta2\" min=\"0\" value=\"-1\"><br>";
-                    
-                    echo "\n<label>{$texto["Generando_8"]} {$z}?</label>";
-                    echo "<input type=\"number\" required step=\"1\" name=\"pregunta3\" min=\"0\" value=\"-1\"><br>";
-                    
-                    echo "\n<label>{$texto["Generando_9"]}</label>";
-                    echo "<input type=\"number\" required step=\"1\" name=\"pregunta4\" min=\"0\" value=\"-1\"><br>";
-                    
-                    echo "\n<label>{$texto["Generando_10"]}</label>";
-                    echo "<input type=\"text\" required name=\"pregunta5\" maxlength=\"50\">";
-                }
+				echo "\n<label>{$texto["Generando_6"]} {$x}?</label>";
+				echo "<input type=\"number\" required step=\"1\" name=\"pregunta1\" min=\"0\" value=\"-1\"><br>";
+				
+				echo "\n<label>{$texto["Generando_7"]} {$y}?</label>";
+				echo "<input type=\"number\" required step=\"1\" name=\"pregunta2\" min=\"0\" value=\"-1\"><br>";
+				
+				echo "\n<label>{$texto["Generando_8"]} {$z}?</label>";
+				echo "<input type=\"number\" required step=\"1\" name=\"pregunta3\" min=\"0\" value=\"-1\"><br>";
+				
+				echo "\n<label>{$texto["Generando_9"]}</label>";
+				echo "<input type=\"number\" required step=\"1\" name=\"pregunta4\" min=\"0\" value=\"-1\"><br>";
+				
+				echo "\n<label>{$texto["Generando_10"]}</label>";
+				echo "<input type=\"text\" required name=\"pregunta5\" maxlength=\"50\">";
 				
 				//Este campo indica que se debe resolver el formulario y es necesario para su correcto procesamiento
 				echo "\n<input hidden name=\"resolver\" value=\"s\"/>";

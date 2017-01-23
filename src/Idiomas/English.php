@@ -100,10 +100,6 @@
 		"Generando_16"=>"Parameter 01",
 		"Generando_17"=>"Parameter 02",
 		"Generando_18"=>"Parameter 03",
-        "Generando_19"=>"¿Qué probabilidad tenemos de que el proyecto finalice antes de ",
-        "Generando_20"=>" unidades de tiempo?",
-        "Generando_21"=>"Si deseamos un ",
-        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos?",
 		
 		//Pert.php
 		"Pert_1"=>"An unexpected error has occurred.",
@@ -127,21 +123,6 @@
 		"Proponer_9"=>"Duration",
 		"Proponer_10"=>"Solve ROY",
 		"Proponer_11"=>"Solve PERT",
-		"Proponer_12"=>"Choose the type of graph you want to propose:",
-        "Proponer_13"=>"Deterministic",
-        "Proponer_14"=>"Stochastic",
-		"Proponer_15"=>"Continue",
-        "Proponer_16"=>"Probability distribution:",
-        "Proponer_17"=>"Normal",
-        "Proponer_18"=>"Beta",
-        "Proponer_19"=>"Triangular",
-        "Proponer_20"=>"Even",
-        "Proponer_21"=>"Parameter 1:",
-        "Proponer_22"=>"Normal(mean) Beta(hopeful time) Triangular(a) Even(minimum)",
-        "Proponer_23"=>"Parameter 2:",
-        "Proponer_24"=>"Normal(typical deviation) Beta(pessimistic time) Triangular(b) Even(maximum)",
-        "Proponer_25"=>"Parameter 3:",
-        "Proponer_26"=>"Normal(0=NOT APPLICABLE) Beta(most likely time) Triangular(c) Even(0=NOT APPLICABLE)",
 		
 		//Historico.php
 		"Historico_1"=>"Graphs history:",
@@ -183,8 +164,7 @@
 		"Funciones_menu_3"=>"History",
 		"Funciones_menu_4"=>"Tutoring",
         "Funciones_menu_5"=>"Generate XML",
-        "Funciones_menu_6"=>"Generate XML Stochastic",
-        				
+				
 		"Funciones_cabecera_1"=>"Logged in as",
 		
 		"Funciones_evaluar_1"=>"Evaluation",

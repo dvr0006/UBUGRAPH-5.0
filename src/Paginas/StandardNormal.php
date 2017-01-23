@@ -141,7 +141,7 @@ class StandardNormal
     /**
      * Array para generar probabilidad aleatoria
      * Clave: Índice aleatorio (de 1 a 29)
-     * Value: probabilidad aleatoria (del 80% al 99.9%)
+     * Valor: probabilidad aleatoria (del 80% al 99.9%)
      * @var array
      */
     private static $probabilidadAleatoria = array(

@@ -100,10 +100,10 @@
 		"Generando_16"=>"Parameter 01",
 		"Generando_17"=>"Parameter 02",
 		"Generando_18"=>"Parameter 03",
-        "Generando_19"=>"¿Qué probabilidad tenemos de que el proyecto finalice antes de ",
-        "Generando_20"=>" unidades de tiempo?",
-        "Generando_21"=>"Si deseamos un ",
-        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos?",
+        "Generando_19"=>"¿Dass Wahrscheinlichkeit wir haben das projekt enden vor ",
+        "Generando_20"=>" einheiten zeit? (2 dezimalstellen)",
+        "Generando_21"=>"Ob wir wollen ",
+        "Generando_22"=>"% wahrscheinlichkeit von enden das projekt rechtzeitig, ¿was einheiten zeit früheste können wir dafür enden das projekt? (1 dezimale)",
         
 		//Pert.php
 		"Pert_1"=>"Es ist ein unerwarteter Fehler aufgetreten.",
@@ -170,7 +170,8 @@
 		"Error_4"=>"Es ist ein unbekannter Fehler aufgetreten.",
 		"Error_5"=>"Wenn der noch anhält,melden Sie sich bei dem Admin.",
 		"Error_6"=>"Titelbild",
-		
+        "Error_7"=>"Aktivität <b>NICHT eingeführt</b>. die Parameter eingeführt generieren ein Unterschied 0 nicht erlaubt.",
+				
 		//Mensaje.php
 		"Mensaje_1"=>"UBUGraph",
 		"Mensaje_2"=>"Achtung!",
@@ -183,7 +184,8 @@
 		"Funciones_menu_3"=>"Verlauf",
 		"Funciones_menu_4"=>"Tutoria",
         "Funciones_menu_5"=>"Generieren XML",
-        "Funciones_menu_6"=>"Generieren XML Stochastische",
+        "Funciones_menu_6"=>"G. XML Stochastische",
+        "Funciones_menu_7"=>"Normale Tabelles",
 				
 		"Funciones_cabecera_1"=>"Eingeloggt als",
 		
@@ -233,6 +235,11 @@
 		"Editando_8"=>"Das Konstostand wurde erfolgreicht geändert.",
 		"Editando_9"=>"Das Verwaltungskonto kann nicht deaktiviert werden.",
 		"Editando_10"=>"Nichts geändert.",
-		"Editando_11"=>"Benutzer nicht gefunden."
+		"Editando_11"=>"Benutzer nicht gefunden.",
+		
+        //Tabla normal.php
+        "Tabla_normal_1"=>"Tabelle von wahrscheinlichkeit von die Z werte",
+        "Tabla_normal_2"=>"Tabelle die Z werte von wahrscheinlichkeit",
+        "Tabla_normal_3"=>"Rechner Z tabelle verteilung Regelmäßig"
 	);
 ?>

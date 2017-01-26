@@ -683,32 +683,38 @@
      */
     function randomActividadProbabilistica ($actividad){
         $d=rand(1,4);
-        if ($d==1){
-            $distribucion='NORMAL';
-            $parametro_01=rand(1,25000)/1000.0;
-            $parametro_02=rand(0,$parametro_01/3*1000)/1000.0; //3 sigmas
-            $parametro_02=round(pow($parametro_02,2),3); //varianza=desviación al cuadrado
-            $parametro_03=null;
+        $varianza=0;
+        $actividad=null;
+        while($varianza==0){
+            if ($d==1){
+                $distribucion='NORMAL';
+                $parametro_01=rand(1,25000)/1000.0;
+                $parametro_02=rand(0,$parametro_01/3*1000)/1000.0; //3 sigmas
+                $parametro_02=round(pow($parametro_02,2),3); //varianza=desviación al cuadrado
+                $parametro_03=null;
+            }
+            else if($d==2){
+                $distribucion='BETA';
+                $parametro_02=rand(1,25000)/1000.0; //valor mas probable
+                $parametro_01=rand(0,$parametro_02*1000)/1000.0; //valor pesimista
+                $parametro_03=rand($parametro_02*1000,25000)/1000.0; //valor optimista
+            }
+            else if($d==3){
+                $distribucion='TRIANGULAR';
+                $parametro_03=rand(1,25000)/1000.0; //valor c (entre a y b)
+                $parametro_01=rand(0,$parametro_03*1000)/1000.0; //valor a
+                $parametro_02=rand($parametro_03*1000,25000)/1000.0; //valor b
+            }
+            else{
+                $distribucion='UNIFORME';
+                $parametro_01=rand(1,25000)/1000.0; //valor a 
+                $parametro_02=rand($parametro_01*1000,25000)/1000.0; //valor b mayor que a
+                $parametro_03=null;
+            }
+            $actividad=new Actividad($actividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);
+            $varianza=$actividad->getVarianza();
         }
-        else if($d==2){
-            $distribucion='BETA';
-            $parametro_02=rand(1,25000)/1000.0; //valor mas probable
-            $parametro_01=rand(0,$parametro_02*1000)/1000.0; //valor pesimista
-            $parametro_03=rand($parametro_02*1000,25000)/1000.0; //valor optimista
-        }
-        else if($d==3){
-            $distribucion='TRIANGULAR';
-            $parametro_03=rand(1,25000)/1000.0; //valor c (entre a y b)
-            $parametro_01=rand(0,$parametro_03*1000)/1000.0; //valor a
-            $parametro_02=rand($parametro_03*1000,25000)/1000.0; //valor b
-        }
-        else{
-            $distribucion='UNIFORME';
-            $parametro_01=rand(1,25000)/1000.0; //valor a 
-            $parametro_02=rand($parametro_01*1000,25000)/1000.0; //valor b mayor que a
-            $parametro_03=null;
-        }
-        return new Actividad($actividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);
+        return $actividad;
     }
 
     /**
@@ -718,9 +724,10 @@
      * @param duraciones duraciones de las actividades del grafo
      * @param idGrafo identificador del grafo en la base de datos
      * @param conexion conexion a al base de datos
+     * @param actividades array de actividades (valor por defecto null)
      * @return infoCaminosCriticos array de información  del /de los caminos críticos de un grafo (integer), media_critica(double) y varianza_critica(double)
      */
-    function infoCaminosCriticos($nombres,$precedencias,$duraciones,$idGrafo,$conexion)
+    function infoCaminosCriticos($nombres,$precedencias,$duraciones,$idGrafo,$conexion,$actividades=null)
     {
 		//////////////RESOLUCION PERT////////////// (¡¡¡OJO!!! Código CLONADO de pertCorregido.php)
 		$precedenciasRoy = $precedencias;
@@ -751,19 +758,41 @@
                         if($nodoSiguiente==null) $nodoSiguiente=$actividad->getNodoDestino();
                         else $variosCaminosCriticos=true;
                         //Media y varianza del camino crítico
-                        //Ejecutar SELECT para acceder a los valores de media y varianza
-                        $consulta = "SELECT media, varianza from nodos WHERE ID_GRAFO = {$idGrafo} and NOMBRE = '{$actividad->getID()}'";     
-                        $result = $conexion->query($consulta);
-                        $row=$result->fetch_assoc();
-                        $media_critica+=$row["media"];
-                        $varianza_critica+=$row["varianza"];
+                        if($actividades==null){
+                            //Ejecutar SELECT para acceder a los valores de media y varianza
+                            $consulta = "SELECT media, varianza from nodos WHERE ID_GRAFO = {$idGrafo} and NOMBRE = '{$actividad->getID()}'";     
+                            $result = $conexion->query($consulta);
+                            $row=$result->fetch_assoc();
+                            $media_critica+=$row["media"];
+                            $varianza_critica+=$row["varianza"];
+                        }
+                        else{
+                            //Buscar la media y la varianza en el array de actividades
+                            foreach($actividades as $actividadCandidata){
+                                if($actividad->getID()==$actividadCandidata->getID()){
+                                    $media_critica+=$actividadCandidata->getMedia();
+                                    $varianza_critica+=$actividadCandidata->getVarianza();
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 $offset++;
             }
+            //Avanzar al siguiente nodo
             $nodoActual=$nodoSiguiente;
             $nodoSiguiente=null;
         }
+        //Comprobar si en las actividades no analizadas todavía queda alguna no ficticia con holgura 0
+        foreach ($grafo as $actividad){
+            $holgura = $nodos[$actividad->getNodoDestino()]["tli"] - $nodos[$actividad->getNodoOrigen()]["tei"] - $actividad->getDuracion();
+            if($holgura<TOLERANCIA_HOLGURA and !$actividad->getFicticia()){
+                $variosCaminosCriticos=true;
+                break;
+            }
+        }
+        //Preparar los valores de salida
         if($existeCaminoCritico){
             if($variosCaminosCriticos) $numeroCaminosCriticos=2;
             else $numeroCaminosCriticos=1;

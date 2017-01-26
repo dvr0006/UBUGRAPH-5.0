@@ -43,38 +43,47 @@
 					$duraciones = array();
 				}
 				
-				//Introducimos el nuevo dato junto a los antiguos
-				//Nombre
-				array_push($nombres, $_POST["nombre"]);
-				
-				//Precedencias en caso de haberlas.
-				if (isset($_POST["precedencia"]))
-				{
-					$p = "";
-					foreach($_POST["precedencia"] as $value)
-					{
-						if($p == "")
-						{
-							$p = $value;
-						}
-						else
-						{
-							$p = $p." ".$value;
-						}
-					}
-					array_push($precedencias, $p);
-				}
-				else
-				{
-					array_push($precedencias, null);
-				}
-				//Duracion
-				if($estocastico=='determinista'){
-                    array_push($duraciones, $_POST["duracion"]);
-				}
-                else{
+				//Comprobar si los parámetros introducidos por el usuario generan una varianza nula.
+				$actividad=null;
+                if($estocastico=='estocastico'){
                     $actividad= new Actividad($_POST["nombre"],null,$_POST["distribucion"],null,null,$_POST["parametro_01"],$_POST["parametro_02"],$_POST["parametro_03"]);
-                    array_push($duraciones, $actividad->getDuracion());
+                }
+                if($estocastico=='estocastico' && $actividad->getVarianza()==0){
+                    echo '<font color="red"><center>'.$texto["Error_7"].'</center></font>';
+                }
+                else{
+                    //Introducimos el nuevo dato junto a los antiguos
+                    //Nombre
+                    array_push($nombres, $_POST["nombre"]);
+                    
+                    //Precedencias en caso de haberlas.
+                    if (isset($_POST["precedencia"]))
+                    {
+                        $p = "";
+                        foreach($_POST["precedencia"] as $value)
+                        {
+                            if($p == "")
+                            {
+                                $p = $value;
+                            }
+                            else
+                            {
+                                $p = $p." ".$value;
+                            }
+                        }
+                        array_push($precedencias, $p);
+                    }
+                    else
+                    {
+                        array_push($precedencias, null);
+                    }
+                    //Duracion
+                    if($estocastico=='determinista'){
+                        array_push($duraciones, $_POST["duracion"]);
+                    }
+                    else{
+                        array_push($duraciones, $actividad->getDuracion());
+                    }
                 }
 			}
 		?>

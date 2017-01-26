@@ -100,10 +100,10 @@
 		"Generando_16"=>"Parameter 01",
 		"Generando_17"=>"Parameter 02",
 		"Generando_18"=>"Parameter 03",
-        "Generando_19"=>"¿Qué probabilidad tenemos de que el proyecto finalice antes de ",
-        "Generando_20"=>" unidades de tiempo?",
-        "Generando_21"=>"Si deseamos un ",
-        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos?",
+        "Generando_19"=>"¿What probability we have of the project ending before ",
+        "Generando_20"=>" time units? (2 decimals)",
+        "Generando_21"=>"If we wish ",
+        "Generando_22"=>"% of probability of terminate the project on time, ¿what earliest units of time can we ensure to teminate the project? (1 decimal)",
 		
 		//Pert.php
 		"Pert_1"=>"An unexpected error has occurred.",
@@ -170,7 +170,8 @@
 		"Error_4"=>"An unknown error has occurred.",
 		"Error_5"=>"If the error continues, please contact the administrator.",
 		"Error_6"=>"Front",
-		
+        "Error_7"=>"<b>NOT added</b> activity. The inserted parameters generate a 0 variance, which is not allowed.",
+				
 		//Mensaje.php
 		"Mensaje_1"=>"UBUGraph",
 		"Mensaje_2"=>"Notice!",
@@ -183,7 +184,8 @@
 		"Funciones_menu_3"=>"History",
 		"Funciones_menu_4"=>"Tutoring",
         "Funciones_menu_5"=>"Generate XML",
-        "Funciones_menu_6"=>"Generate XML Stochastic",
+        "Funciones_menu_6"=>"G. XML Stochastic",
+        "Funciones_menu_7"=>"Normal Tables",
         				
 		"Funciones_cabecera_1"=>"Logged in as",
 		
@@ -233,6 +235,11 @@
 		"Editando_8"=>"The status account has been changed successfully.",
 		"Editando_9"=>"Administrator account can not be deactivated.",
 		"Editando_10"=>"Without changes.",
-		"Editando_11"=>"User not founded."
+		"Editando_11"=>"User not founded.",
+		
+        //Tabla normal.php
+        "Tabla_normal_1"=>"Probabilities table from Z values",
+        "Tabla_normal_2"=>"Z values table from probabilities",
+        "Tabla_normal_3"=>"Z table normal distribution calculator"
 	);
 ?>

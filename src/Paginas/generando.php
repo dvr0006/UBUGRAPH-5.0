@@ -125,7 +125,7 @@
                         $numCaminosCriticos=$info[0];
                         $mediaCritica=$info[1];
                         $varianzaCritica=$info[2];
-						if($numCaminosCriticos!=1){
+						if($numCaminosCriticos!=1 && $metodo=="pert_probabilistico"){
                             //Procede generar otro grafo candidato
                             $nombres = array();
                             $precedencias = array();
@@ -212,7 +212,7 @@
 				        //Necesitamos un tiempo de finalización de proyecto que generamos aleatoriamente entre un rango de la media crítica mas 1 sigma y la media crítica mas 3 sigmas.
 				        //Despues calculamos la probabilidad de que el proyecto acabe antes o en el momento de fin de proyecto generado anteriormente.
 				        $desviacion=sqrt($varianzaCritica);
-				        $p6=rand($mediaCritica+$desviacion,$mediaCritica+3*$desviacion);
+				        $p6=rand(($mediaCritica+$desviacion)*10,($mediaCritica+3*$desviacion)*10)/10;
                         $valorTipificado=($p6-$mediaCritica)/$desviacion;
                         $probabilidad=round(StandardNormal::getZScoreProbability($valorTipificado)*100,2);
                         $r6=$probabilidad;
@@ -223,13 +223,8 @@
                         $valorAleatorio=rand(1,29); 
 				        $p7=StandardNormal::getProbabilidadAleatoria($valorAleatorio);
                         //Si la probabilidad elegida al azar tiene decimales
-                        if($p7>99){
-                            $valorZ=StandardNormal::getZScoreForConfidenceInterval((String)$p7);
-                        }
-                        else{
-                            $valorZ=StandardNormal::getZScoreForConfidenceInterval($p7);
-                        }
-				        $r7=round($valorZ*$desviacion+$mediaCritica);
+                        $valorZ=StandardNormal::getZScoreForConfidenceInterval($p7);
+				        $r7=round($valorZ*$desviacion+$mediaCritica,1);
                         //Guardamos las preguntas en la base de datos
                         $consulta = "INSERT INTO preguntas(ID_GRAFO, TIEMPO_FIN, RIESGO) VALUES({$idGrafo}, '{$p6}', '{$p7}');";
                         $conexion->query($consulta);
@@ -274,7 +269,7 @@
                     echo "<input type=\"number\" required step=\"0.01\" name=\"pregunta_tiempo\" min=\"0\" value=\"-1\"><br>";
 
                     echo "\n<label>{$texto["Generando_21"]} {$p7}{$texto["Generando_22"]}</label>";
-                    echo "<input type=\"number\" required step=\"1\" name=\"pregunta_riesgo\" min=\"0\" value=\"-1\"><br>";
+                    echo "<input type=\"number\" required step=\"0.1\" name=\"pregunta_riesgo\" min=\"0\" value=\"-1\"><br>";
                 }
                 else{
                     echo "\n<label>{$texto["Generando_6"]} {$x}?</label>";

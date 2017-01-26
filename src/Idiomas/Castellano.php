@@ -101,9 +101,9 @@
 		"Generando_17"=>"Parámetro 02",
 		"Generando_18"=>"Parámetro 03",
 		"Generando_19"=>"¿Qué probabilidad tenemos de que el proyecto finalice antes de ",
-		"Generando_20"=>" unidades de tiempo?",
+		"Generando_20"=>" unidades de tiempo? (2 decimales)",
         "Generando_21"=>"Si deseamos un ",
-        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos a finalizar el proyecto?",
+        "Generando_22"=>"% de probabilidades de finalizar a tiempo el proyecto, ¿a qué unidades de tiempo más tempranas podemos comprometernos a finalizar el proyecto? (1 decimal)",
         				
 		//Pert.php
 		"Pert_1"=>"Se ha producido un error inesperado.",
@@ -170,6 +170,7 @@
 		"Error_4"=>"Se ha producido un error desconocido.",
 		"Error_5"=>"Si persiste póngase en contacto con el administrador.",
 		"Error_6"=>"Portada",
+		"Error_7"=>"Actividad <b>NO agregada</b>. Los parámetos introducidos generan una varianza 0 que no esta permitida.",
 		
 		//Mensaje.php
 		"Mensaje_1"=>"UBUGraph",
@@ -183,9 +184,10 @@
 		"Funciones_menu_3"=>"Histórico",
 		"Funciones_menu_4"=>"Tutoria",
 		"Funciones_menu_5"=>"Generar XML",
-		"Funciones_menu_6"=>"Generar XML Estocástico",
-		
-		"Funciones_cabecera_1"=>"Logueado como",
+		"Funciones_menu_6"=>"G. XML Estocástico",
+        "Funciones_menu_7"=>"Tablas Normal",
+
+        		"Funciones_cabecera_1"=>"Logueado como",
 		
 		"Funciones_evaluar_1"=>"Evaluación",
 		"Funciones_evaluar_3"=>"Respuesta correcta:",
@@ -228,6 +230,11 @@
 		"Editando_8"=>"El estado de la cuenta se ha cambiado correctamente.",
 		"Editando_9"=>"La cuenta de administración no puede desactivarse.",
 		"Editando_10"=>"Sin cambios.",
-		"Editando_11"=>"Usuario no encontrado."
+		"Editando_11"=>"Usuario no encontrado.",
+		
+		//Tabla normal.php
+		"Tabla_normal_1"=>"TABLA de probabilidades a partir de los valores de Z",
+        "Tabla_normal_2"=>"TABLA de valores de Z a partir de las probabilidades",
+        "Tabla_normal_3"=>"Calculador tabla Z distribución NORMAL"
 	);
 ?>

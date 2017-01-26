@@ -1,6 +1,6 @@
 <?php 
 	/**
-	* @author Adrián Santamaría Leal
+	* @author Daniel Velasco Revilla
 	*/
 	require_once("funcionesRoy.php");
 	require_once("funcionesPert.php");
@@ -14,7 +14,7 @@
 	* @param array duraciones duraciones de las actividades
 	* @return tablaHTML tabla en código HTML
 	*/
-	function dibujarTabla($nombres, $precedencias, $duraciones){
+	function dibujarTablaEstocastica($nombres, $precedencias, $duraciones){
 		require_once("funciones.php");
 		require("../".idioma());
 		
@@ -50,7 +50,7 @@
 	* @param array duraciones duraciones de las actividades
 	* @param grafo grafo con las actividades 
 	*/
-	function obtenerGrafoRoy($nombres,$duraciones,$precedencias,&$grafo){
+	function obtenerGrafoRoyEstocastica($nombres,$duraciones,$precedencias,&$grafo){
 		$grafo = generarNodos($nombres,$precedencias,$duraciones);
 		establecerPrecedenciasRoy($grafo,$nombres,$duraciones,$precedencias);
 		calcularTiempos($grafo);
@@ -66,7 +66,7 @@
 	* @param array duraciones duraciones de las actividades
 	* @param grafo grafo con las actividades 
 	*/
-	function obtenerGrafoPert($nombres,$duraciones,$precedencias,&$grafo){
+	function obtenerGrafoPertEstocastica($nombres,$duraciones,$precedencias,&$grafo){
 		$precedenciasRoy = $precedencias;
 		$grafo = generarActividades($nombres,$precedencias,$duraciones);
 		establecerPrecedenciasPert($grafo,$nombres, $duraciones, $precedencias);
@@ -82,7 +82,7 @@
 	* @param grafo grafo con las actividades 
 	* @return preg_resp array con la pregunta y la respuesta
 	*/
-	function generarPreguntaNumerica($nombres,$grafo){
+	function generarPreguntaNumericaEstocastica($nombres,$grafo){
 		$m = new Mustache_Engine;
 		$preguntas = array("¿Cuál es la holgura de la actividad {{actividad}}?","¿Cuál es el tiempo de finalización del proyecto?");
 		$pos = rand(0,sizeof($preguntas)-1);
@@ -103,7 +103,7 @@
 	* @param grafo grafo con las actividades 
 	* @return preg_resp array con la pregunta y la respuesta
 	*/
-	function generarPreguntaVF($grafo){
+	function generarPreguntaVFEstocastica($grafo){
 		$numFicticias = 0;
 		foreach($grafo as $value){
 			if($value->getFicticia())
@@ -123,7 +123,7 @@
 	* @param grafo grafo con las actividades 
 	* @return preg_resp array con la pregunta y la respuesta
 	*/
-	function generarPreguntaSelSimple($grafo){
+	function generarPreguntaSelSimpleEstocastica($grafo){
 		$nodosCriticos = 0;
 		foreach($grafo as $value){
 			if($value->getID() != "Inicio" && $value->getID() != "Fin"){
@@ -144,7 +144,7 @@
 	* @param grafo grafo con las actividades 
 	* @return preg_resp array con la pregunta y la respuesta
 	*/
-	function generarPreguntaSelMult($nombres,$grafo){
+	function generarPreguntaSelMultEstocastica($nombres,$grafo){
 		$nodosCriticos = array();
 		foreach($grafo as $value){
 			if($value->getID() != "Inicio" && $value->getID() != "Fin"){
@@ -168,7 +168,7 @@
 	* @param data grafo resuelto
 	* @return file archivo con la pregunta escrita
 	*/
-	function escribirPregunta($file,$tabla,$preg_resp,$tipo,$i,$data){
+	function escribirPreguntaEstocastica($file,$tabla,$preg_resp,$tipo,$i,$data){
 		fputs($file,"\n\t<question type=\"$tipo\">");	
 		fputs($file,"\n\t\t<name>\n\t\t\t<text>Pregunta $i</text>\n\t\t</name>");
 		fputs($file,"$tabla

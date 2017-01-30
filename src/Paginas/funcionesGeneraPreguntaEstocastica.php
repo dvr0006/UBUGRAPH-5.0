@@ -9,28 +9,42 @@
 	
 	/**
 	* Se dibuja la tabla en HTML
-	* @param array nombres nombres de las actividades
-	* @param array precedencias precedencias de cada actividad
-	* @param array duraciones duraciones de las actividades
+    * @param array nombres nombres de las actividades
+    * @param array precedencias precedencias de cada actividad
+    * @param array de actividades
 	* @return tablaHTML tabla en código HTML
 	*/
-	function dibujarTablaEstocastica($nombres, $precedencias, $duraciones){
+	function dibujarTablaEstocastica($nombres, $precedencias, $actividades){
 		require_once("funciones.php");
+        require_once("StandardNormal.php");
 		require("../".idioma());
 		
 		$m = new Mustache_Engine;
-		$tablaXML = "<tr>
+		$plantillaXML = "<tr>
 						<td>{{nombre}}</td>
 						<td>{{precedencia}}</td>
 						<td>{{duracion}}</td>
+                        <td>{{distribucion}}</td>
+                        <td>{{media}}</td>
+                        <td>{{varianza}}</td>
+                        <td>{{parametro_01}}</td>
+                        <td>{{parametro_02}}</td>
+                        <td>{{parametro_03}}</td>
 					</tr>
 					";
 		$tabla = "";
-		$filas = array("nombre"=>$texto["Generando_3"], "precedencia"=>$texto["Generando_4"], "duracion"=>$texto["Generando_5"]);
-		$tabla .= $m->render($tablaXML, $filas);
-		for($j=0; $j < sizeof($nombres);$j++){
-				$filas = array("nombre"=>$nombres[$j],"precedencia"=>$precedencias[$j], "duracion"=>$duraciones[$j]);
-				$tabla .= $m->render($tablaXML, $filas);
+		$filas = array("nombre"=>$texto["Generando_3"], "precedencia"=>$texto["Generando_4"], "duracion"=>$texto["Generando_5"],"distribucion"=>$texto["Generando_13"],"media"=>$texto["Generando_14"],"varianza"=>$texto["Generando_15"],"parametro_01"=>$texto["Generando_16"],"parametro_02"=>$texto["Generando_17"],"parametro_03"=>$texto["Generando_18"]);
+		$tabla .= $m->render($plantillaXML, $filas);
+        foreach($actividades as $a){
+            $index=-1;
+            for($i=0; $i<count($nombres); $i++){
+                if($a->getID()==$nombres[$i]){
+                    $index=$i;
+                    break;
+                }
+            }
+			$filas = array("nombre"=>$a->getID(),"precedencia"=>$precedencias[$index], "duracion"=>$a->getDuracion(),"distribucion"=>$a->getDistribucion(),"media"=>$a->getMedia(),"varianza"=>$a->getVarianza(),"parametro_01"=>$a->getParametro_01(),"parametro_02"=>$a->getParametro_02(),"parametro_03"=>$a->getParametro_03());
+			$tabla .= $m->render($plantillaXML, $filas);
 		}
 		
 		$tablaHTML = "\n\t\t<questiontext format=\"html\">
@@ -77,87 +91,34 @@
 	}
 	
 	/**
-	* Se genera una pregunta numérica aleatoria
-	* @param array nombres nombres de las actividades
-	* @param grafo grafo con las actividades 
+	* Se genera una pregunta cloze aleatoria
+	* @param mediaCritica Suma de las medias de las actividades que pertenecen al camino crítico
+    * @param varianzaCritica Suma de las varianzas de las actividades que pertenecen al camino crítico
 	* @return preg_resp array con la pregunta y la respuesta
 	*/
-	function generarPreguntaNumericaEstocastica($nombres,$grafo){
-		$m = new Mustache_Engine;
-		$preguntas = array("¿Cuál es la holgura de la actividad {{actividad}}?","¿Cuál es el tiempo de finalización del proyecto?");
-		$pos = rand(0,sizeof($preguntas)-1);
-		$pregunta = $preguntas[$pos];
-		if($pos == 0){
-			$actividadAleatoria = $nombres[rand(0,sizeof($nombres)-1)];
-			$actividad = array("actividad"=>$actividadAleatoria);
-			$respuesta = $grafo[$actividadAleatoria]->getHolguraTotal();
-			$pregunta = $m->render($pregunta,$actividad);
-		} else {
-			$respuesta = $grafo["Fin"]->getTLI();
-		}
-		return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);			
+	function generarPreguntaClozeEstocastica($mediaCritica, $varianzaCritica){
+        $sentido = rand(0,1); //1 éxito, 0 fracaso
+        //Primera pregunta
+        $preg_resp=StandardNormal::getPreguntaProbabilidadFromTiempo($mediaCritica, $varianzaCritica);
+        $preguntaProb=$preg_resp["pregunta"];
+        $respuestaProb=$preg_resp["respuesta"];
+        $repuestaProb=($sentido==1)?$respuestaProb:100-$respuestaProb;
+        //Segunda pregunta
+        $preg_resp=StandardNormal::getPreguntaTiempoFromProbabilidad($mediaCritica, $varianzaCritica);
+        $preguntaTime=$preg_resp["pregunta"];
+        $preguntaTime=($sentido==1)?$preguntaTime:100-$preguntaTime;
+        $respuestaTime=$preg_resp["respuesta"];
+        //Componer el texto de la pregunta cloze con las respuestas embebidas
+        $pregunta="La probabilidad de que el proyecto finalice ";
+        $pregunta.=($sentido==1)? "antes ":"después ";
+        $pregunta.="de ".$preguntaProb." unidades de tiempo es del ";
+        $pregunta.="{1:NUMERICAL:=".$respuestaProb.":0.01}% (2 decimales). Y si deseamos que el proyecto ";
+        if($sentido==0) $pregunta.="NO ";
+        $pregunta.="finalice a tiempo con una probabilidad del ".$preguntaTime."% debemos comprometernos a finalizarlo antes de ";
+        $pregunta.="{1:NUMERICAL:=".$respuestaTime.":0.1} unidades de tiempo (1 decimal)";        
+        return array("pregunta"=>$pregunta,"respuesta"=>null);            
 	}
 	
-	/**
-	* Se genera una pregunta de verdadero o falso
-	* @param grafo grafo con las actividades 
-	* @return preg_resp array con la pregunta y la respuesta
-	*/
-	function generarPreguntaVFEstocastica($grafo){
-		$numFicticias = 0;
-		foreach($grafo as $value){
-			if($value->getFicticia())
-				$numFicticias++;
-		}
-		$nFicticiasPreg = rand(0,$numFicticias);
-		if($numFicticias == $nFicticiasPreg){
-			$respuesta = true;
-		}else
-			$respuesta = false;
-		$pregunta = "¿Este grafo PERT tiene $nFicticiasPreg actividades ficticias?";
-		return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);	
-	}
-	
-	/**
-	* Se genera una pregunta de selección múltiple con una solo respuesta
-	* @param grafo grafo con las actividades 
-	* @return preg_resp array con la pregunta y la respuesta
-	*/
-	function generarPreguntaSelSimpleEstocastica($grafo){
-		$nodosCriticos = 0;
-		foreach($grafo as $value){
-			if($value->getID() != "Inicio" && $value->getID() != "Fin"){
-				$nombre = $value->getID();
-				if($value->getCritico()){
-					$nodosCriticos++;
-				}				
-			}
-		}
-		$pregunta = "¿Cuántas actividades forman parte del (los) camino(s) crítico(s)? (si hubiese varios sume las actividades).";
-		$respuesta = $nodosCriticos;
-		return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);
-	}
-	
-	/**
-	* Se genera una pregunta de selección múltiple con varias respuestas
-	* @param array nombres nombres de las actividades
-	* @param grafo grafo con las actividades 
-	* @return preg_resp array con la pregunta y la respuesta
-	*/
-	function generarPreguntaSelMultEstocastica($nombres,$grafo){
-		$nodosCriticos = array();
-		foreach($grafo as $value){
-			if($value->getID() != "Inicio" && $value->getID() != "Fin"){
-				if($value->getCritico()){
-					array_push($nodosCriticos,$value->getID());
-				}				
-			}
-		}
-		$pregunta = "Seleccione las actividades críticas.";
-		$respuesta = $nodosCriticos;
-		return array("pregunta"=>$pregunta,"respuesta"=>$respuesta,"nombres"=>$nombres);
-	}
-
 	/**
 	* Se escribe la pregunta con el formato adecuado (XML) en un fichero
 	* @param file archivo donde se va a escribir
@@ -178,61 +139,7 @@
 		fputs($file,"\n\t\t<generalfeedback format=\"html\">");
 		fputs($file,"\n\t\t\t<text><![CDATA[$data<br>]]></text>");
 		fputs($file,"\n\t\t</generalfeedback>");
-		if(!is_array($preg_resp["respuesta"]))
-			$tagAnswer = "\n\t\t<answer fraction=\"100\">\n\t\t\t<text>{$preg_resp["respuesta"]}</text>\n\t\t</answer>";
-		if($tipo == "truefalse"){
-			if($preg_resp["respuesta"]){
-				$verdadero = 100;
-				$falso = 0;
-			}
-			else {
-				$verdadero = 0;
-				$falso = 100;
-			}
-			$tagAnswer = "\n\t\t<answer fraction=\"$verdadero\">\n\t\t\t<text>true</text>\n\t\t</answer>
-						  \n\t\t<answer fraction=\"$falso\">\n\t\t\t<text>false</text>\n\t\t</answer>" ;
-		}
-		if($tipo == "multichoice"){
-			if(!is_array($preg_resp["respuesta"])){
-				$nRespuestas = 3;
-				$respuestas = array();
-				array_push($respuestas, $preg_resp["respuesta"]);
-				$respuesta = $preg_resp["respuesta"];
-				$negativo = false;
-				for($j = 0; $j< $nRespuestas ;$j++){
-					$masmenos = rand(0,1);
-					do{
-						if($masmenos == 0 || $negativo)
-							$respuesta++;
-						else
-							$respuesta--;
-						if($respuesta == 0)
-							$negativo = true;
-						
-					}while(in_array($respuesta,$respuestas));
-					array_push($respuestas,$respuesta);
-					$tagAnswer.= "\n\t\t<answer fraction=\"0\">\n\t\t\t<text>$respuesta</text>\n\t\t</answer>";
-					
-				}
-				$tagAnswer.= "\n\t\t<shuffleanswers>true</shuffleanswers>";
-			} else{
-				$nombres = $preg_resp["nombres"];
-				$respuestas = $preg_resp["respuesta"];
-				$ponderacion = 100/sizeof($respuestas);
-				$tagAnswer= "";
-				foreach($nombres as $value){
-					$valor = 0;
-					if(in_array($value,$respuestas))
-						$valor = $ponderacion;
-					$tagAnswer.= "\n\t\t<answer fraction=\"$valor\">\n\t\t\t<text>$value</text>\n\t\t</answer>";	
-				}
-				$tagAnswer.="\n\t\t<single>false</single>";
-				$tagAnswer.="\n\t\t<answernumbering>none</answernumbering>";
-			}
-		}
-		
-		fputs($file,$tagAnswer);
-		fputs($file,"\n\t</question>");		
+    	fputs($file,"\n\t</question>");		
 		return $file;
 	}
 ?>

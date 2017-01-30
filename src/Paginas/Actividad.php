@@ -291,6 +291,24 @@
 			return $this->actividadesPrecedentes;
 		}
 		
+        /**
+         * Devuelve los ids de las actividad precedentes a esta en una cadena serarados por blancos
+         * @return Un string con los identificadores separados por blancos
+         */
+        public function getPrecedentesString()
+        {
+            $precedentes = "";
+            foreach ($this->actividadesPrecedentes as $idActividad) {
+                if ($precedentes==""){
+                    $precedentes=$idActividad;
+                }
+                else{
+                    $precedentes=$precedentes+" "+$idActividad;
+                }
+            }
+            return $precedentes;
+        }
+
 		/**
 		 * Devuelve los ids de las actividad a los que precede esta actividad
 		 * @return Un array con los identificadores

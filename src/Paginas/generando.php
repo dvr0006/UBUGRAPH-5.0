@@ -207,24 +207,17 @@
 				{
 				    if($metodoOriginal=="pert_probabilistico"){
 				        //Generar preguntas probabilísticas
-
 				        //Pregunta 6
-				        //Necesitamos un tiempo de finalización de proyecto que generamos aleatoriamente entre un rango de la media crítica mas 1 sigma y la media crítica mas 3 sigmas.
-				        //Despues calculamos la probabilidad de que el proyecto acabe antes o en el momento de fin de proyecto generado anteriormente.
-				        $desviacion=sqrt($varianzaCritica);
-				        $p6=rand(($mediaCritica+$desviacion)*10,($mediaCritica+3*$desviacion)*10)/10;
-                        $valorTipificado=($p6-$mediaCritica)/$desviacion;
-                        $probabilidad=round(StandardNormal::getZScoreProbability($valorTipificado)*100,2);
-                        $r6=$probabilidad;
+				        //Probabilidad a partir de un tiempo de finalización aleatorio
+                        $preg_resp6=StandardNormal::getPreguntaProbabilidadFromTiempo($mediaCritica, $varianzaCritica);
+				        $p6=$preg_resp6["pregunta"];
+                        $r6=$preg_resp6["respuesta"];
             
                         //Pregunta 7
-                        //Necesitamos una probabilidad que generamos aleatoriamente entre un 80% y un 99.9% (29 valores).
-                        //Después calculamos el valor tipificado para esa probabilidad y hallamos el valor destipificado correspondiente al tiempo de finalización del proyecto.
-                        $valorAleatorio=rand(1,29); 
-				        $p7=StandardNormal::getProbabilidadAleatoria($valorAleatorio);
-                        //Si la probabilidad elegida al azar tiene decimales
-                        $valorZ=StandardNormal::getZScoreForConfidenceInterval($p7);
-				        $r7=round($valorZ*$desviacion+$mediaCritica,1);
+                        //Tiempo de finalización a partir de un tiempo de una probabilidad aleatoria
+                        $preg_resp7=StandardNormal::getPreguntaTiempoFromProbabilidad($mediaCritica, $varianzaCritica);
+				        $p7=$preg_resp7["pregunta"];
+                        $r7=$preg_resp7["respuesta"];
                         //Guardamos las preguntas en la base de datos
                         $consulta = "INSERT INTO preguntas(ID_GRAFO, TIEMPO_FIN, RIESGO) VALUES({$idGrafo}, '{$p6}', '{$p7}');";
                         $conexion->query($consulta);

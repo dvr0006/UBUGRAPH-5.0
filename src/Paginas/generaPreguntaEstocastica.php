@@ -27,7 +27,7 @@
 			fputs($file,"<?xml version=\"1.0\" ?>");
 			fputs($file,"\n<quiz>");
 					
-			for($i=1;$i<=$numPreguntas;$i++){
+			for($index=1;$index<=$numPreguntas;$index++){
 				$nombres = array();
 				$precedencias = array();
 				$duraciones = array();
@@ -90,20 +90,17 @@
                         $generarNuevoGrafo=false;
                     }
                 }
-                //TODO
-				generarTablaPrecedenciasEstocastica($numAct,$probabilidad, $ids, $nombres, $precedencias, $duraciones);
-				$tabla = dibujarTablaEstocastica($nombres, $precedencias, $duraciones);
+				$tabla = dibujarTablaEstocastica($nombres, $precedencias, $actividades);
 				$grafo = null;
 				
 				if($contCloze > 0){
-					$data = obtenerGrafoRoyEstocastica($nombres,$duraciones,$precedencias,$grafo);
-					$preg_resp = generarPreguntaCloze($nombres,$grafo);
-					$tipo = "numerical";
-					$hecha = true;
-					$contNumericas--;
+					$data = obtenerGrafoPertEstocastica($nombres,$duraciones,$precedencias,$grafo);
+					$preg_resp = generarPreguntaClozeEstocastica($mediaCritica,$varianzaCritica);
+					$tipo = "cloze";
+					$contCloze--;
 				}
 				
-				$file = escribirPreguntaEstocastica($file,$tabla,$preg_resp,$tipo,$i,$data);
+				$file = escribirPreguntaEstocastica($file,$tabla,$preg_resp,$tipo,$index,$data);
 				
 			}
 			fputs($file,"\n</quiz>");

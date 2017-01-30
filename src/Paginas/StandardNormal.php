@@ -206,7 +206,7 @@ class StandardNormal
         return StandardNormal::$Z_SCORES_FOR_CONFIDENCE_INTERVALS[$cl];
     }
     /**
-     * Obtener probabilidad aleatoria para generar la pregunta 7 
+     * Obtener probabilidad aleatoria para generar la pregunta de tiempo dada una probabilidad 
      *
      * @param  int numero aletorio
      *
@@ -214,6 +214,43 @@ class StandardNormal
      */
     public static function getProbabilidadAleatoria($valorAleatorio = 29)
     {
-        return StandardNormal::$probabilidadAleatoria[$valorAleatorio];
+        return self::$probabilidadAleatoria[$valorAleatorio];
+    }
+
+    /**
+     * Generar pregunta de probabilidad a partir de un tiempo aleatorio 
+     *
+     * @param  media media de la distribución normal
+     * @param  varianza varianza de la distribución normal
+     * @return array pregunta respuesta
+     */
+    public static function getPreguntaProbabilidadFromTiempo($media, $varianza)
+    {
+        //Necesitamos un tiempo de finalización de proyecto que generamos aleatoriamente entre un rango de la media mas 1 sigma y la media mas 3 sigmas.
+        //Despues calculamos la probabilidad de que el proyecto acabe antes o en el momento de fin de proyecto generado anteriormente.
+        $desviacion=sqrt($varianza);
+        $pregunta=rand(($media+$desviacion)*10,($media+3*$desviacion)*10)/10;
+        $valorTipificado=($pregunta-$media)/$desviacion;
+        $respuesta=round(self::getZScoreProbability($valorTipificado)*100,2);
+        return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);
+    }
+    
+    /**
+     * Generar pregunta de tiempo a partir de una probabilidad aleatoria 
+     *
+     * @param  media media de la distribución normal
+     * @param  varianza varianza de la distribución normal
+     * @return array pregunta respuesta
+     */
+    public static function getPreguntaTiempoFromProbabilidad($media, $varianza)
+    {
+        //Necesitamos una probabilidad que generamos aleatoriamente entre un 80% y un 99.9% (29 valores).
+        //Después calculamos el valor tipificado para esa probabilidad y hallamos el valor destipificado correspondiente al tiempo de finalización del proyecto.
+        $desviacion=sqrt($varianza);
+        $valorAleatorio=rand(1,29); 
+        $pregunta=self::getProbabilidadAleatoria($valorAleatorio);
+        $valorZ=self::getZScoreForConfidenceInterval($pregunta);
+        $respuesta=round($valorZ*$desviacion+$media,1);
+        return array("pregunta"=>$pregunta,"respuesta"=>$respuesta);
     }
 }

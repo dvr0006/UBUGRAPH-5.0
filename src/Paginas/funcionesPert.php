@@ -681,7 +681,7 @@
      * @param actividad identificador de la actividad
      * @return actividad actividad aleatoria probabilística (objeto)
      */
-    function randomActividadProbabilistica ($actividad){
+    function randomActividadProbabilistica ($idActividad){
         $d=rand(1,4);
         $varianza=0;
         $actividad=null;
@@ -711,7 +711,7 @@
                 $parametro_02=rand($parametro_01*1000,25000)/1000.0; //valor b mayor que a
                 $parametro_03=null;
             }
-            $actividad=new Actividad($actividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);
+            $actividad=new Actividad($idActividad,null,$distribucion,null,null,$parametro_01,$parametro_02,$parametro_03);
             $varianza=$actividad->getVarianza();
         }
         return $actividad;

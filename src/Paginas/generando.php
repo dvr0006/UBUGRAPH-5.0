@@ -147,7 +147,12 @@
 				}
 				
 				//Mostramos al usuario la tabla de precedencias que corresponda dependiendo del método.
-				echo "\n<h2 style=\"text-align: center;\">{$texto["Generando_2"]}  (".strtoupper($metodo).")</h2>";
+				if ($metodo=="pert_probabilistico"){
+	                echo "\n<h2 style=\"text-align: center;\">{$texto["Generando_2"]}  ({$texto["Generar_5"]})</h2>";
+    			}
+                else{
+                    echo "\n<h2 style=\"text-align: center;\">{$texto["Generando_2"]}  (".strtoupper($metodo).")</h2>";
+                }
 				echo "\n<table style=\"width: 100%;\">";
 					echo "\n<tr>";
 						echo "\n<th>{$texto["Generando_3"]}</th>";

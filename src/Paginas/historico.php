@@ -48,6 +48,8 @@
 					//Mostramos los grafos con su fecha, tipo y puntuacion y un enlace a su resolucion
 					while($reg)
 					{
+					    //Correción del archivo php de resolución utilizado (Daniel)
+					    //Antes se llamaba a pert.php (obsoleto) y no a pertCorregido(actual).
                         $metodo=(strtolower($reg["RESOLUCION"])=='roy')?'roy':'pertCorregido';
                         if(strtolower($reg["RESOLUCION"])=='pert_probabilistico'){
                             echo "\n<a  href=\"./{$metodo}.php?id={$reg["ID_GRAFO"]}\"><li>{$reg["FECHA"]} --> {$reg["RESOLUCION"]} --> {$reg["CALIFICACION"]}/2</li></a>";                        

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * MIT License
+ * Copyright (c) 2016 Mark Rogoyski
  * Standard normal tables for Z and related methods
  *
  * A standard normal table, also called the unit normal table or Z table,
@@ -22,6 +24,10 @@
  * textbooks to include this table, so this library does as well. It is better
  * to use the standard normal distribution CDF function when a Z score is required.
  */
+ 
+ //Esta clase ha sido creada modificando el archivo descargado de: https://github.com/markrogoyski/math-php/blob/master/src/Probability/Distribution/Table/StandardNormal.php
+ //Es propiedad de Mark Rogoyski y tiene una licencia MIT
+ 
 class StandardNormal
 {
     /**
@@ -106,6 +112,7 @@ class StandardNormal
      * Value: Z score
      * @var array
      */
+    //Esta variable ha sido modificada respecto al original
     public static $Z_SCORES_FOR_CONFIDENCE_INTERVALS = array(
         '80'     => 0.84,
         '81'     => 0.88,
@@ -144,6 +151,7 @@ class StandardNormal
      * Valor: probabilidad aleatoria (del 80% al 99.9%)
      * @var array
      */
+     //(Daniel)
     public static $probabilidadAleatoria = array(
         1   => '80',
         2   => '81',
@@ -212,6 +220,7 @@ class StandardNormal
      *
      * @return probabilidad deseada
      */
+     //(Daniel)
     public static function getProbabilidadAleatoria($valorAleatorio = 29)
     {
         return self::$probabilidadAleatoria[$valorAleatorio];
@@ -224,6 +233,7 @@ class StandardNormal
      * @param  varianza varianza de la distribución normal
      * @return array pregunta respuesta
      */
+     //(Daniel)
     public static function getPreguntaProbabilidadFromTiempo($media, $varianza)
     {
         //Necesitamos un tiempo de finalización de proyecto que generamos aleatoriamente entre un rango de la media mas 1 sigma y la media mas 3 sigmas.
@@ -242,6 +252,7 @@ class StandardNormal
      * @param  varianza varianza de la distribución normal
      * @return array pregunta respuesta
      */
+     //(Daniel)
     public static function getPreguntaTiempoFromProbabilidad($media, $varianza)
     {
         //Necesitamos una probabilidad que generamos aleatoriamente entre un 80% y un 99.9% (29 valores).

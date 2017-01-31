@@ -281,8 +281,7 @@
 					}
 					
 					if($problematica)
-					{//print_r($value);print_r($value2);
-						$hecho = true;
+					{	$hecho = true;
 						foreach($value->getPosteriores() as $p)
 						{
 							if(in_array($p, $value2->getPosteriores()))
@@ -558,6 +557,8 @@
 			if($value->getFicticia()){
 				foreach($grafo as $value2){
 					if($value->getNodoDestino() == $value2->getNodoDestino()){
+					    //Correción en la elección de la actividad correcta $value2.
+                        //Al estar $value no elegía la actividad correcta y algunas veces en los nodos a los que llegaban ficticias se calculaba mal el "tei" (Daniel) 
 						$precedentes[$value2->getID()] = $nodos[$value2->getNodoOrigen()]["tei"] + $value2->getDuracion();
 					}
 				}							
@@ -565,7 +566,7 @@
 				continue;
 			$nodos[$value->getNodoDestino()]["tei"] = max($precedentes);
 		}
-        //Corregir valor "tli" del nodo inicial
+        //Corregir valor "tli" del nodo inicial (Daniel)
         $nodos[1]["tli"]=0;
 		return $nodos;
 	}
@@ -595,7 +596,7 @@
 	* @return gv grafo PERT resuelto
 	*/
 	function generarGrafoPert($grafo,$nodos,$resolver = false,$conexion = null,$preguntas = null) {
-	    //Flag para saber si proceden las preguntas deterministas
+	    //Flag para saber si proceden las preguntas deterministas (Daniel)
         $resolverDeterminista=isset($preguntas["NOMBRE_1"]) && isset($preguntas["NOMBRE_2"]) && isset($preguntas["NOMBRE_3"]);
 		//Generacion del objeto gráfico de la librería GraphViz
 		$gv = new Image_GraphViz(true, array("rankdir"=>"LR", "size"=>"8.333,11.111!"), "PERT", false, false);
@@ -678,6 +679,7 @@
     
     /**
      * Creación aleatoria de una actividad probabilística
+     * @author Daniel Velasco Revilla
      * @param actividad identificador de la actividad
      * @return actividad actividad aleatoria probabilística (objeto)
      */
@@ -685,6 +687,7 @@
         $d=rand(1,4);
         $varianza=0;
         $actividad=null;
+        //Obligamos a generar una varianza con un valor distinto de cero (al tipificar y destipificar en el Tabla Z de la normal podría darse el caso de división entre 0).
         while($varianza==0){
             if ($d==1){
                 $distribucion='NORMAL';
@@ -718,7 +721,8 @@
     }
 
     /**
-     * Calculo del numero de caminos críticos
+     * Función que nos da información sobre la criticidad de un grafo. En concreto, número de caminos críticos, media crítica y varianza crítica
+     * @author Daniel Velasco Revilla
      * @param nombres nombres de las actividades del grafo
      * @param precendencias precedencias de las actividades de un grafo
      * @param duraciones duraciones de las actividades del grafo
@@ -729,7 +733,7 @@
      */
     function infoCaminosCriticos($nombres,$precedencias,$duraciones,$idGrafo,$conexion,$actividades=null)
     {
-		//////////////RESOLUCION PERT////////////// (¡¡¡OJO!!! Código CLONADO de pertCorregido.php)
+		//Resolvemos el Pert. Lo hacemos igual que en pertCorregido.php)
 		$precedenciasRoy = $precedencias;
 		/////Generamos el conjunto de Actividades////
 		$grafo = generarActividades($nombres,$precedencias,$duraciones);
@@ -753,6 +757,7 @@
                 if($actividad->getNodoOrigen()==$nodoActual){
                     array_splice($grafo,$offset--,1); //Quitar elemento leído
 					$holgura = $nodos[$actividad->getNodoDestino()]["tli"] - $nodos[$actividad->getNodoOrigen()]["tei"] - $actividad->getDuracion();
+                    //Uso de una tolerancia debido al redondeo del procesador de los números flotantes.
                     if($holgura<TOLERANCIA_HOLGURA and !$actividad->getFicticia()){
                         $existeCaminoCritico=true;
                         if($nodoSiguiente==null) $nodoSiguiente=$actividad->getNodoDestino();

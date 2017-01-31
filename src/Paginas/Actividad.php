@@ -84,7 +84,7 @@
         private $parametro_01 = null;
         
         /**
-         * Parámetro 02 de la distribución de probabilidad (desviación típica, tiempo pesimista, b, máximo)
+         * Parámetro 02 de la distribución de probabilidad (varianza, tiempo pesimista, b, máximo)
          */
         private $parametro_02 = null;
         
@@ -109,6 +109,7 @@
 		
         /**
          * Constructor de la clase (Actividades PERT probabilístico)
+         * @author Daniel Velasco Revilla
          * @param id El id de la actividad. También el nombre que se mostrara.
          * @param distribucion La distribución de probabilidad.
          * 
@@ -293,6 +294,7 @@
 		
         /**
          * Devuelve los ids de las actividad precedentes a esta en una cadena serarados por blancos
+         * @author Daniel Velasco Revilla
          * @return Un string con los identificadores separados por blancos
          */
         public function getPrecedentesString()

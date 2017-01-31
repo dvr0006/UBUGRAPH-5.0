@@ -1,6 +1,7 @@
 <?php 
 	/**
 	* @author Daniel Velasco Revilla
+    * Basado en funcionesGeneraPregunta.php de Adrían Santamaría Leal
 	*/
 	require_once("funcionesRoy.php");
 	require_once("funcionesPert.php");
@@ -53,24 +54,12 @@
 						<table align=\"center\" border=\"1\" style=\"width: 100%\">
 						$tabla
 						</table><br>
+						<font size=2 color=maroon>Ayuda:</font><br>
+						<font size=1 color=maroon>Parametro 01: Normal(media), Beta(tiempo optimista), Triangular(a), Uniforme(mínimo)<br>
+						Parametro 02: Normal(varianza), Beta(tiempo pesimista), Triangular(b), Uniforme(máximo)<br>
+						Parametro 03: Normal(NO PROCEDE), Beta(tiempo más probable), Triangular(c), Uniforme(NO PROCEDE)</font><br><br>
 						]]>";
 		return $tablaHTML;
-	}
-	
-	/**
-	* Se obtiene el grafo ROY
-	* @param array nombres nombres de las actividades
-	* @param array precedencias precedencias de cada actividad
-	* @param array duraciones duraciones de las actividades
-	* @param grafo grafo con las actividades 
-	*/
-	function obtenerGrafoRoyEstocastica($nombres,$duraciones,$precedencias,&$grafo){
-		$grafo = generarNodos($nombres,$precedencias,$duraciones);
-		establecerPrecedenciasRoy($grafo,$nombres,$duraciones,$precedencias);
-		calcularTiempos($grafo);
-		$gv = generarGrafoRoy($grafo);
-		$data = dibujarGrafo($gv);
-		return $data;
 	}
 	
 	/**
@@ -92,30 +81,26 @@
 	
 	/**
 	* Se genera una pregunta cloze aleatoria
+    * @author Daniel Velasco Revilla
 	* @param mediaCritica Suma de las medias de las actividades que pertenecen al camino crítico
     * @param varianzaCritica Suma de las varianzas de las actividades que pertenecen al camino crítico
 	* @return preg_resp array con la pregunta y la respuesta
 	*/
 	function generarPreguntaClozeEstocastica($mediaCritica, $varianzaCritica){
-        $sentido = rand(0,1); //1 éxito, 0 fracaso
         //Primera pregunta
         $preg_resp=StandardNormal::getPreguntaProbabilidadFromTiempo($mediaCritica, $varianzaCritica);
         $preguntaProb=$preg_resp["pregunta"];
         $respuestaProb=$preg_resp["respuesta"];
-        $repuestaProb=($sentido==1)?$respuestaProb:100-$respuestaProb;
         //Segunda pregunta
         $preg_resp=StandardNormal::getPreguntaTiempoFromProbabilidad($mediaCritica, $varianzaCritica);
         $preguntaTime=$preg_resp["pregunta"];
-        $preguntaTime=($sentido==1)?$preguntaTime:100-$preguntaTime;
         $respuestaTime=$preg_resp["respuesta"];
         //Componer el texto de la pregunta cloze con las respuestas embebidas
-        $pregunta="La probabilidad de que el proyecto finalice ";
-        $pregunta.=($sentido==1)? "antes ":"después ";
-        $pregunta.="de ".$preguntaProb." unidades de tiempo es del ";
-        $pregunta.="{1:NUMERICAL:=".$respuestaProb.":0.01}% (2 decimales). Y si deseamos que el proyecto ";
-        if($sentido==0) $pregunta.="NO ";
-        $pregunta.="finalice a tiempo con una probabilidad del ".$preguntaTime."% debemos comprometernos a finalizarlo antes de ";
-        $pregunta.="{1:NUMERICAL:=".$respuestaTime.":0.1} unidades de tiempo (1 decimal)";        
+        $pregunta="La probabilidad de que el proyecto finalice antes de ";
+        $pregunta.=$preguntaProb." unidades de tiempo es del ";
+        $pregunta.="{1:NUMERICAL:=".$respuestaProb.":1}% (2 decimales). Y si deseamos que el proyecto finalice a tiempo con una probabilidad del ";
+        $pregunta.=$preguntaTime."% debemos comprometernos a finalizarlo antes de ";
+        $pregunta.="{1:NUMERICAL:=".$respuestaTime.":1} unidades de tiempo (1 decimal).";        
         return array("pregunta"=>$pregunta,"respuesta"=>null);            
 	}
 	

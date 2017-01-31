@@ -80,6 +80,7 @@
 		"Generar_2"=>"Linking probability (%):",
 		"Generar_3"=>"Solving method:",
 		"Generar_4"=>"Generate",
+        "Generar_5"=>"PROBABILISTIC PERT",
 		
 		//Generando.php
 		"Generando_1"=>"There are undefined data.",
@@ -139,7 +140,7 @@
         "Proponer_21"=>"Parameter 1:",
         "Proponer_22"=>"Normal(mean) Beta(hopeful time) Triangular(a) Even(minimum)",
         "Proponer_23"=>"Parameter 2:",
-        "Proponer_24"=>"Normal(typical deviation) Beta(pessimistic time) Triangular(b) Even(maximum)",
+        "Proponer_24"=>"Normal(variance) Beta(pessimistic time) Triangular(b) Even(maximum)",
         "Proponer_25"=>"Parameter 3:",
         "Proponer_26"=>"Normal(0=NOT APPLICABLE) Beta(most likely time) Triangular(c) Even(0=NOT APPLICABLE)",
 		

@@ -119,8 +119,7 @@
 							$consulta = "INSERT INTO nodos(NOMBRE, ID_GRAFO, DURACION, PRECEDENCIAS, DISTRIBUCION, MEDIA, VARIANZA, PARAMETRO_01, PARAMETRO_02, PARAMETRO_03) VALUES('{$ids[$i]}', {$idGrafo}, {$duracionNodo}, '{$p}', {$null01}, {$null02}, {$null03}, {$null04}, {$null05}, {$null06});";
 							$conexion->query($consulta);
 						}
-                        //Comprobar si hay que generar un nuevo grafo (solo queremos grafos con un único camino crítico)
-                        //Porque vamos a preguntar al alumno por datos del camino crítico
+                        //Comprobar si hay que generar un nuevo grafo (solo queremos grafos con un único camino crítico para pert probabilístico) (Daniel)
                         $info=infoCaminosCriticos($nombres, $precedencias, $duraciones, $idGrafo, $conexion);
                         $numCaminosCriticos=$info[0];
                         $mediaCritica=$info[1];
@@ -147,7 +146,7 @@
 					header("Location: ../paginas/error.php?e=".urlencode($texto["Generando_1"]));
 				}
 				
-				//Mostramos al usuario la tabla de precedencias.
+				//Mostramos al usuario la tabla de precedencias que corresponda dependiendo del método.
 				echo "\n<h2 style=\"text-align: center;\">{$texto["Generando_2"]}  (".strtoupper($metodo).")</h2>";
 				echo "\n<table style=\"width: 100%;\">";
 					echo "\n<tr>";
@@ -206,7 +205,7 @@
 				if($tuplas == 0)
 				{
 				    if($metodoOriginal=="pert_probabilistico"){
-				        //Generar preguntas probabilísticas
+				        //Generar preguntas probabilísticas (Daniel)
 				        //Pregunta 6
 				        //Probabilidad a partir de un tiempo de finalización aleatorio
                         $preg_resp6=StandardNormal::getPreguntaProbabilidadFromTiempo($mediaCritica, $varianzaCritica);

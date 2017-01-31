@@ -80,6 +80,7 @@
 		"Generar_2"=>"Probabilidad de enlace (%):",
 		"Generar_3"=>"Método de resolución:",
 		"Generar_4"=>"Generar",
+		"Generar_5"=>"PERT PROBABILÍSTICO",
 		
 		//Generando.php
 		"Generando_1"=>"Hay datos sin definir.",
@@ -139,7 +140,7 @@
         "Proponer_21"=>"Parametro 1:",
         "Proponer_22"=>"Normal(media) Beta(tiempo optimista) Triangular(a) Uniforme(mínimo)",
         "Proponer_23"=>"Parametro 2:",
-        "Proponer_24"=>"Normal(desviación típica) Beta(tiempo pesimista) Triangular(b) Uniforme(máximo)",
+        "Proponer_24"=>"Normal(varianza) Beta(tiempo pesimista) Triangular(b) Uniforme(máximo)",
         "Proponer_25"=>"Parametro 3:",
         "Proponer_26"=>"Normal(0=NO PROCEDE) Beta(tiempo más probable) Triangular(c) Uniforme(0=NO PROCEDE)",
                         

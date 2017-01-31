@@ -43,7 +43,7 @@
 					$duraciones = array();
 				}
 				
-				//Comprobar si los parámetros introducidos por el usuario generan una varianza nula.
+				//Comprobar si los parámetros introducidos por el usuario generan una varianza nula. (Daniel)
 				$actividad=null;
                 if($estocastico=='estocastico'){
                     $actividad= new Actividad($_POST["nombre"],null,$_POST["distribucion"],null,null,$_POST["parametro_01"],$_POST["parametro_02"],$_POST["parametro_03"]);
@@ -93,7 +93,7 @@
 			<!-- formulario de agregacion de nodos nuevos -->
 			<form id="proponer_problema" action="./proponer.php" method="post">
 				<?php
-					//La primera vez pedir si el tipo de grafo va a ser estocastico o no
+					//La primera vez pedir si el tipo de grafo va a ser estocastico o no (Daniel)
 					if ($estocastico==null){
 						echo '<b>'.$texto["Proponer_12"].'</b><br>';
                         echo '<input name="estocastico" type="radio" value="determinista"\>'.$texto["Proponer_13"].'<br>';

@@ -223,8 +223,9 @@
     		echo "\n<h2 style=\"text-align: center;\">{$texto["Funciones_evaluar_9"]} {$calificacion}/5</h2>";
 		}
 
+        //Añadido por: Daniel Velasco Revilla
         //PREGUNTAS ESTOCÁSTICAS
-        //TODO Generar preguntas estocasticas en la evaluación (usar valores del folio para la internacionalización)
+        //Generar preguntas estocásticas en la evaluación (usar valores del folio para la internacionalización)
         if (isset($preguntas["TIEMPO_FIN"]) && isset($preguntas["RIESGO"])){
             //Pregunta Tiempo_Fin
             echo "\n<p>{$texto["Generando_19"]} {$preguntas["TIEMPO_FIN"]} {$texto["Generando_20"]}</p>";

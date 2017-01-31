@@ -78,8 +78,9 @@
 		//Generar.php
 		"Generar_1"=>"Anzahlaktivität:",
 		"Generar_2"=>"Verbindungswahrseinlichkeiten (%):",
-		"Generar_3"=>"Método de resolución:",
+		"Generar_3"=>"Auflösungsverfahren:",
 		"Generar_4"=>"Generieren",
+        "Generar_5"=>"PERT PROBABILISTISCHE",
 		
 		//Generando.php
 		"Generando_1"=>"Es gibt unbestimmte Dateien.",
@@ -139,7 +140,7 @@
         "Proponer_21"=>"Parameter 1:",
         "Proponer_22"=>"Regelmäßig(durchschnitt) Beta(zeit optimistisch) Dreieckig(a) Gleichmäßig(minimun)",
         "Proponer_23"=>"Parameter 2:",
-        "Proponer_24"=>"Regelmäßig(Ablenkung typisch) Beta(zeit pessimistisch) Dreieckig(b) Gleichmäßig(maximun)",
+        "Proponer_24"=>"Regelmäßig(unterschied) Beta(zeit pessimistisch) Dreieckig(b) Gleichmäßig(maximun)",
         "Proponer_25"=>"Parameter 3:",
         "Proponer_26"=>"Regelmäßig(0=NICHT ANWENDBAR) Beta(zeit besser mutmaßlich) Dreieckig(c) Gleichmäßig(0=NICHT ANWENDBAR)",
 		
@@ -182,7 +183,7 @@
 		"Funciones_menu_1"=>"Generieren",
 		"Funciones_menu_2"=>"Vorschlagen",
 		"Funciones_menu_3"=>"Verlauf",
-		"Funciones_menu_4"=>"Tutoria",
+		"Funciones_menu_4"=>"Vormundschaft",
         "Funciones_menu_5"=>"Generieren XML",
         "Funciones_menu_6"=>"G. XML Stochastische",
         "Funciones_menu_7"=>"Normale Tabelles",

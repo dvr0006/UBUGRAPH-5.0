@@ -8,7 +8,7 @@
 		
 		"smtp" => "ssl://smtp.gmail.com", //SMTP de salida
 		"smtpPort" => 465, //Puerto del smtp
-		"mailUser" => "UBUGraph4@gmail.com", //Usuario del correo que vamos a usar
-		"mailPass" => "UBUGraph2016" //Contraseña del correo
+		"mailUser" => "UBUGraph5@gmail.com", //Usuario del correo que vamos a usar
+		"mailPass" => "ubugraph2017" //Contraseña del correo
 		);
 ?>

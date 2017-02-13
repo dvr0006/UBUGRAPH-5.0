@@ -55,9 +55,9 @@
 						$tabla
 						</table><br>
 						<font size=2 color=maroon>Ayuda:</font><br>
-						<font size=1 color=maroon>Parametro 01: Normal(media), Beta(tiempo optimista), Triangular(a), Uniforme(mínimo)<br>
-						Parametro 02: Normal(varianza), Beta(tiempo pesimista), Triangular(b), Uniforme(máximo)<br>
-						Parametro 03: Normal(NO PROCEDE), Beta(tiempo más probable), Triangular(c), Uniforme(NO PROCEDE)</font><br><br>
+						<font size=1 color=maroon>Parametro 01: Normal(media), Beta(tiempo pesimista), Triangular(a), Uniforme(mínimo)<br>
+						Parametro 02: Normal(varianza), Beta(tiempo más probable), Triangular(b), Uniforme(máximo)<br>
+						Parametro 03: Normal(NO PROCEDE), Beta(tiempo optimista), Triangular(c), Uniforme(NO PROCEDE)</font><br><br>
 						]]>";
 		return $tablaHTML;
 	}
